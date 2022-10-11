@@ -55,11 +55,11 @@ abstract class MapLayer {
 
 
 mixin MapLayerStyleSupport on MapLayer {
-  Future<void> addJSONLayers(String sourceId, List<Map<String, dynamic>> layers, { String? belowLayerId }) async {
+  Future<void> addJSONLayers(List<Map<String, dynamic>> layers, { String? belowLayerId }) async {
     await Future.wait(
       layers.map(
         (layer) => controller.addLayer(
-          sourceId,
+          layer['source'] as String,
           layer['id'] as String,
           _createLayerPropertiesFromJson(layer),
           sourceLayer: layer['source-layer'] as String?,

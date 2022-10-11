@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ptia/shared/utils/map_layer_manager.dart';
 
-import 'utils/map_routing_layer.dart';
-import 'utils/map_indoor_layer.dart';
+import '/models/position.dart';
 import '/shared/utils/indoor_level_controller.dart';
 import '/shared/widgets/map_view.dart';
+import 'utils/map_routing_layer.dart';
+import 'utils/map_indoor_layer.dart';
 import 'widgets/indoor_level_bar.dart';
 
 
@@ -21,7 +22,17 @@ class _MapScreenState extends State<MapScreen> {
 
   late final _mapLayerManager = MapLayerManager([
     MapIndoorLayer(_levelController),
-    MapRoutingLayer(),
+    MapRoutingLayer([
+      Position( 51.0257624, 13.7227283, level: 1 ),
+      Position( 51.0256934, 13.7231176, level: 1 ),
+      Position( 51.0254485, 13.7230115, level: 1 ),
+      Position( 51.0253990, 13.7232873, level: 1 ),
+      Position( 51.0253433, 13.7232624, level: 1 ),
+      Position( 51.0253433, 13.7232624, level: 0 ),
+      Position( 51.0252868, 13.7232387, level: 0 ),
+      Position( 51.0253017, 13.7231613, level: 0 ),
+      Position( 51.0255040, 13.7232477, level: 0 ),
+    ]),
   ]);
 
   @override

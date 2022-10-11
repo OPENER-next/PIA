@@ -59,8 +59,12 @@ const commonPoi = {
 const rank2Class = ['waste_basket', 'information', 'vending_machine', 'bench', 'photo_booth', 'ticket_validator'];
 
 const layers = [
+
+    // Indoor areas \\
+
   {
     'id': 'indoor-polygon',
+    'source': 'indoor-vector-tiles',
     'type': 'fill',
     'source-layer': 'area',
     'filter': [
@@ -101,6 +105,7 @@ const layers = [
   },
   {
     'id': 'indoor-area',
+    'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'area',
     'filter': [
@@ -120,6 +125,7 @@ const layers = [
   },
   {
     'id': 'indoor-column',
+    'source': 'indoor-vector-tiles',
     'type': 'fill',
     'source-layer': 'area',
     'filter': [
@@ -136,6 +142,7 @@ const layers = [
   },
   {
     'id': 'indoor-lines',
+    'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'area',
     'filter': [
@@ -154,6 +161,7 @@ const layers = [
   },
   {
     'id': 'indoor-transportation',
+    'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'transportation',
     'filter': [
@@ -180,8 +188,31 @@ const layers = [
       }
     }
   },
+
+  // Indoor routing \\
+
+  {
+    'id': 'indoor-routing-path',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      'all',
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#448aff',
+      'line-width': 8,
+    },
+  },
+
+  // POIs and labels \\
+
   {
     'id': 'indoor-transportation-poi',
+    'source': 'indoor-vector-tiles',
     'type': 'symbol',
     'source-layer': 'transportation',
     'filter': [
@@ -226,6 +257,7 @@ const layers = [
   },
   {
     'id': 'indoor-poi-rank1',
+    'source': 'indoor-vector-tiles',
     ...commonPoi,
     'filter': [
       'all',
@@ -243,6 +275,7 @@ const layers = [
   },
   {
     'id': 'indoor-poi-rank2',
+    'source': 'indoor-vector-tiles',
     ...commonPoi,
     'minzoom': 19,
     'filter': [
@@ -261,6 +294,7 @@ const layers = [
   },
   {
     'id': 'indoor-name',
+    'source': 'indoor-vector-tiles',
     'type': 'symbol',
     'source-layer': 'area_name',
     'filter': [
