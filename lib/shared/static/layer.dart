@@ -192,7 +192,7 @@ const layers = [
   // Indoor routing \\
 
   {
-    'id': 'indoor-routing-path',
+    'id': 'indoor-routing-path2',
     'source': 'indoor-routing-path',
     'type': 'line',
     'filter': [
@@ -203,8 +203,25 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#448aff',
-      'line-width': 8,
+      'line-color': '#42a5f5',
+      'line-width': 5,
+    },
+  },
+  {
+    'id': 'indoor-routing-path',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      'all',
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+      'line-gap-width': 5
+    },
+    'paint': {
+      'line-color': '#0077c2',
+      'line-width': 2,
     },
   },
 
