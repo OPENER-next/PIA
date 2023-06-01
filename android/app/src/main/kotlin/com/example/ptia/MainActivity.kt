@@ -1,4 +1,4 @@
-package com.example.ptia
+package com.example.pia
 
 import io.flutter.embedding.android.FlutterActivity
 

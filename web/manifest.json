@@ -1,6 +1,6 @@
 {
-    "name": "ptia",
-    "short_name": "ptia",
+    "name": "pia",
+    "short_name": "pia",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
