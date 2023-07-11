@@ -5,7 +5,7 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 
 import '/shared/static/layer.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '/shared/utils/map_layer_manager.dart';
+import '../map_layer_manager.dart';
 
 
 class MapIndoorLayer extends MapLayer with MapLayerStyleSupport {

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import '/models/position.dart';
-import '/shared/utils/map_layer_manager.dart';
+import '/shared/models/position.dart';
+import '../map_layer_manager.dart';
 
 class MapRoutingLayer extends MapLayer {
   final sourceId = 'indoor-routing-path';

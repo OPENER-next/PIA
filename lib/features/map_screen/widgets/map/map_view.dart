@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
-import '/shared/utils/map_layer_manager.dart';
+import 'map_layer_manager.dart';
 
 
 typedef OverlayBuilder = Widget Function(

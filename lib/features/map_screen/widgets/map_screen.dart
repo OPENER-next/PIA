@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pia/shared/utils/map_layer_manager.dart';
 
-import '/models/position.dart';
+import '/shared/models/position.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '/shared/widgets/map_view.dart';
-import 'utils/map_routing_layer.dart';
-import 'utils/map_indoor_layer.dart';
-import 'widgets/indoor_level_bar.dart';
+import 'map/map_view.dart';
+import 'map/map_layer_manager.dart';
+import 'map/layers/map_routing_layer.dart';
+import 'map/layers/map_indoor_layer.dart';
+import 'overlay/indoor_level_bar.dart';
 
 
 class MapScreen extends StatefulWidget {
