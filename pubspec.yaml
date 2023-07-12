@@ -4,16 +4,23 @@ publish_to: 'none'
 version: 0.0.1+1
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  collection: ^1.16.0
+  collection: ^1.17.1
+  http: ^1.1.0
   maplibre_gl:
     git:
-      url: https://github.com/m0nac0/flutter-maplibre-gl.git
+      url: https://github.com/maplibre/flutter-maplibre-gl.git
       ref: main
+  flutter_mvvm_architecture:
+    git:
+      url: https://github.com/Robbendebiene/flutter-mvvm-architecture.git
+  get_it: ^7.6.0
+  mobx: ^2.2.0
+  flutter_mobx: ^2.0.6+5
 
 dev_dependencies:
   flutter_test:
