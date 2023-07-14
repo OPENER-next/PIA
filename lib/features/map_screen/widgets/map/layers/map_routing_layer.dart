@@ -27,7 +27,11 @@ class MapRoutingLayer extends MapLayer {
     "properties": {
       "level": level.toString(),
     },
-    "geometry": {
+    if (coordinates.length == 1) "geometry": {
+      "type": "Point",
+      "coordinates": coordinates.first,
+    }
+    else "geometry": {
       'type': 'LineString',
       "coordinates": coordinates,
     },
