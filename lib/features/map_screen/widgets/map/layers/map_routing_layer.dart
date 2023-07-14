@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '/shared/models/level.dart';
 import '/shared/models/position.dart';
 import '../map_layer_manager.dart';
 
@@ -21,7 +22,7 @@ class MapRoutingLayer extends MapLayer {
   }
 
 
-  Map<String, dynamic> _createGeoJsonFeature(List<List<double>> coordinates, num level) => {
+  Map<String, dynamic> _createGeoJsonFeature(List<List<double>> coordinates, Level level) => {
     "type": "Feature",
     "properties": {
       "level": level.toString(),
@@ -33,8 +34,10 @@ class MapRoutingLayer extends MapLayer {
   };
 
   Iterable<Map<String, dynamic>> _createGeoJsonFeatures() sync* {
-    num level = path.isNotEmpty ? path.first.level : double.nan;
-     List<List<double>> positionBuffer = [];
+    if (path.isEmpty) return;
+
+    Level level = path.first.level;
+    List<List<double>> positionBuffer = [];
 
     for (final position in path) {
       if (position.level != level) {

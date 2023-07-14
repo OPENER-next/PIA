@@ -1,10 +1,12 @@
 import 'package:maplibre_gl/mapbox_gl.dart';
 
+import 'level.dart';
+
 
 class Position extends LatLng {
-  final num level;
+  final Level level;
 
   const Position(super.latitude, super.longitude, {
-    this.level = 0,
+    this.level = Level.zero,
   });
 }
