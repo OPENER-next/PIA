@@ -17,7 +17,13 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
 
   final _levelController = IndoorLevelController(
-    levels: {-1: '-1', 0: 'EG', 1: 'OG1', 2: 'OG2', 3: 'OG3'},
+    levels: {
+      Level.fromNumber(-1): '-1',
+      Level.fromNumber(0): 'EG',
+      Level.fromNumber(1): 'OG1',
+      Level.fromNumber(2): 'OG2',
+      Level.fromNumber(3): 'OG3',
+    },
   );
 
   late final _mapLayerManager = MapLayerManager([

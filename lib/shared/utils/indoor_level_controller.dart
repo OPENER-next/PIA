@@ -2,29 +2,31 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 
+import '../models/level.dart';
+
 
 class IndoorLevelController extends ChangeNotifier {
 
-  final SplayTreeMap<num, String> _levels;
+  final SplayTreeMap<Level, String> _levels;
 
-  num _level;
+  Level _level;
 
   IndoorLevelController({
-    Map<num, String> levels = const {},
-    num initialLevel = 0,
+    Map<Level, String> levels = const {},
+    Level initialLevel = Level.zero,
   }) :
     _levels = SplayTreeMap.of(levels),
     _level = initialLevel;
 
 
-  num get level => _level;
+  Level get level => _level;
 
   /// Changes the level to the given level.
   ///
   /// This will return false if the level is not present in the [levels] map.
   /// Otherwise returns true.
 
-  bool changeLevel(num level) {
+  bool changeLevel(Level level) {
     if (!_levels.containsKey(level)) {
       return false;
     }
@@ -39,7 +41,7 @@ class IndoorLevelController extends ChangeNotifier {
   ///
   /// Returns the new level which might be unchanged if there isn't any level above.
 
-  num levelUp() {
+  Level levelUp() {
     final newLevel = _levels.firstKeyAfter(_level);
     if (newLevel != null) {
       changeLevel(newLevel);
@@ -51,7 +53,7 @@ class IndoorLevelController extends ChangeNotifier {
   ///
   /// Returns the new level which might be unchanged if there isn't any level below.
 
-  num levelDown() {
+  Level levelDown() {
     final newLevel = _levels.lastKeyBefore(_level);
     if (newLevel != null) {
       changeLevel(newLevel);
@@ -62,15 +64,15 @@ class IndoorLevelController extends ChangeNotifier {
 
   /// Levels are automatically sorted by their key.
 
-  UnmodifiableMapView<num, String> get levels => UnmodifiableMapView(_levels);
+  UnmodifiableMapView<Level, String> get levels => UnmodifiableMapView(_levels);
 
-  set levels(Map<num, String> levels) {
+  set levels(Map<Level, String> levels) {
     _levels..clear()..addAll(levels);
     _adjustLevel();
     notifyListeners();
   }
 
-  void addLevel(num level, String label) {
+  void addLevel(Level level, String label) {
     _levels[level] = label;
     notifyListeners();
   }
@@ -79,7 +81,7 @@ class IndoorLevelController extends ChangeNotifier {
   ///
   /// Returns true if the level was present and removed.
 
-  bool removeLevel(num level) {
+  bool removeLevel(Level level) {
     final isRemoved = _levels.remove(level) != null;
     if (isRemoved) {
       _adjustLevel();
@@ -93,14 +95,14 @@ class IndoorLevelController extends ChangeNotifier {
 
   void _adjustLevel() {
     if (!levels.containsKey(_level)) {
-      if (levels.containsKey(0)) {
-        _level = 0;
+      if (levels.containsKey(Level.zero)) {
+        _level = Level.zero;
       }
       else {
         _level = _levels.lastKeyBefore(_level)
           ?? _levels.firstKeyAfter(_level)
           ?? _levels.lastKey()
-          ?? 0;
+          ?? Level.zero;
       }
     }
   }

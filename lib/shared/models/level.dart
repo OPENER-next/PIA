@@ -4,7 +4,7 @@
 /// Solves precision and number conversion problems, because a double (1.0) and
 /// int (1) have different String representations.
 
-class Level {
+class Level implements Comparable<Level> {
   final String _level;
 
   const Level._(this._level);
@@ -48,4 +48,7 @@ class Level {
 
   @override
   int get hashCode => _level.hashCode;
+
+  @override
+  int compareTo(Level other) => (asNumber - other.asNumber).toInt();
 }
