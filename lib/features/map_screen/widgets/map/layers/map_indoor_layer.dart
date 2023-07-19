@@ -1,31 +1,52 @@
 import 'dart:async';
 
-import 'package:flutter/rendering.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 
 import '/shared/static/layer.dart';
 import '/shared/utils/indoor_level_controller.dart';
 import '../map_layer_manager.dart';
 
+class MapIndoorLayer implements MapLayerDescription {
+  final IndoorLevelController levelController;
 
-class MapIndoorLayer extends MapLayer with MapLayerStyleSupport {
-  final sourceId = 'indoor-vector-tiles';
+  const MapIndoorLayer({
+    required this.levelController,
+  });
+
+  @override
+  _MapIndoorLayer create(String id) => _MapIndoorLayer(id, this);
+}
+
+class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport {
   // TODO: currently this is hard coded and extracted manually from the theme/style, but it depends on the style that is used
   final belowLayerId = 'waterway';
 
-  final IndoorLevelController? levelController;
-
-  MapIndoorLayer([this.levelController]);
+  _MapIndoorLayer(super.id, super.description);
 
   Future<void> register() async {
-    await controller.addSource(sourceId, VectorSourceProperties(
+    await controller.addSource(id, VectorSourceProperties(
       url: 'https://tiles.indoorequal.org/?key=iek_3sf20d7fK0dzUhvVBcrOEg3YR6X1'
     ));
     await addJSONLayers(layers, belowLayerId: belowLayerId);
 
-    levelController?.addListener(_handleLevelChange);
+    description.levelController.addListener(_handleLevelChange);
     await _handleLevelChange();
   }
+
+  Future<void> update(oldDescription) async {
+    if (description != oldDescription) {
+      oldDescription.levelController.removeListener(_handleLevelChange);
+      description.levelController.addListener(_handleLevelChange);
+      await _handleLevelChange();
+    }
+  }
+
+  Future<void> unregister() async {
+   description.levelController.removeListener(_handleLevelChange);
+    await controller.removeSource(id);
+    await removeJSONLayers(layers);
+  }
+
 
   /// Update the map filter for the provided layers based on the level controllers level.
 
@@ -37,17 +58,11 @@ class MapIndoorLayer extends MapLayer with MapLayerStyleSupport {
           [
             ...(layer['filter'] as List<dynamic>? ?? ['all']),
             // without toString the filter won't work
-            ['==', 'level',  levelController?.level.toString() ?? '0']
+            ['==', 'level', description.levelController.level.toString()]
           ],
         ),
       )
     );
-  }
-
-  Future<void> unregister() async {
-    levelController?.removeListener(_handleLevelChange);
-    await controller.removeSource(sourceId);
-    await removeJSONLayers(layers);
   }
 }
 

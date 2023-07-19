@@ -4,23 +4,32 @@ import '/shared/models/level.dart';
 import '/shared/models/position.dart';
 import '../map_layer_manager.dart';
 
-class MapRoutingLayer extends MapLayer {
-  final sourceId = 'indoor-routing-path';
 
+class MapRoutingLayer implements MapLayerDescription {
   final List<Position> path;
 
-  MapRoutingLayer([
-    List<Position>? path,
-  ]) : path = path ?? [];
+  const MapRoutingLayer({
+    this.path = const [],
+  });
+
+  @override
+  MapLayer<MapLayerDescription> create(String id) => _MapRoutingLayer(id, this);
+}
+
+class _MapRoutingLayer extends MapLayer<MapRoutingLayer> {
+  _MapRoutingLayer(super.id, super.description);
 
   Future<void> register() async {
-    await controller.addGeoJsonSource(sourceId, _createGeoJsonFeatureCollection());
+    await controller.addGeoJsonSource(id, _createGeoJsonFeatureCollection());
+  }
+
+  Future<void> update(oldDescription) async {
+    await controller.setGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
   Future<void> unregister() async {
-    await controller.removeSource(sourceId);
+    await controller.removeSource(id);
   }
-
 
   Map<String, dynamic> _createGeoJsonFeature(List<List<double>> coordinates, Level level) => {
     "type": "Feature",
@@ -38,12 +47,12 @@ class MapRoutingLayer extends MapLayer {
   };
 
   Iterable<Map<String, dynamic>> _createGeoJsonFeatures() sync* {
-    if (path.isEmpty) return;
+    if (description.path.isEmpty) return;
 
-    Level level = path.first.level;
+    Level level = description.path.first.level;
     List<List<double>> positionBuffer = [];
 
-    for (final position in path) {
+    for (final position in description.path) {
       if (position.level != level) {
         yield _createGeoJsonFeature(positionBuffer, level);
 

@@ -2,9 +2,12 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 
 
 class MapLayerManager {
-  final List<MapLayer> _layers;
+  final Map<String, MapLayer> _layers;
 
-  MapLayerManager([ this._layers = const [] ]);
+  MapLayerManager([ Map<String, MapLayerDescription> layers = const {} ]) :
+    _layers = layers.map(
+      (id, description) => MapEntry(id, description.create(id)),
+    );
 
   MaplibreMapController? _controller;
 
@@ -18,43 +21,116 @@ class MapLayerManager {
     }
   }
 
+  Future<bool> set(String id, MapLayerDescription description) async {
+    var isNew = false;
+
+    final layer = _layers.putIfAbsent(id, () {
+      isNew = true;
+      return description.create(id);
+    });
+
+    if (_controller != null) {
+      if (isNew) {
+        await _registerLayer(layer);
+      }
+      else {
+        await layer._update(description);
+      }
+    }
+    return isNew;
+  }
+
+  Future<void> remove(String id) async {
+    final layer = _layers.remove(id);
+    if (layer != null) {
+      await _unregisterLayer(layer);
+    }
+  }
+
+
   Future<void> _registerLayers() async {
-    for (final layer in _layers) {
-      assert(_controller != null);
-      layer._controller = _controller;
-      try {
-        await layer.register();
-      }
-      catch(e) {
-        // swallow errors for now
-        print(e);
-      }
+    for (final layer in _layers.values) {
+      await _registerLayer(layer);
+    }
+  }
+
+  Future<void> _registerLayer(MapLayer layer) async {
+    assert(_controller != null);
+    layer._controller = _controller;
+    try {
+      await layer.register();
+    }
+    catch(e) {
+      // swallow errors for now
+      print(e);
     }
   }
 
   Future<void> _unregisterLayers() async {
-    for (final layer in _layers) {
-      await layer.unregister();
-      layer._controller = null;
+    for (final layer in _layers.values) {
+      await _unregisterLayer(layer);
     }
+  }
+
+  Future<void> _unregisterLayer(MapLayer layer) async {
+    await layer.unregister();
+    layer._controller = null;
   }
 }
 
 
 
-abstract class MapLayer {
+// This construct works like Flutter's Widget (MapLayerDescription) and
+// Element (MapLayer) or StatefulWidget and State separation.
+
+/// Used to update a respective element layer.
+
+abstract interface class MapLayerDescription {
+  MapLayer create(String id);
+}
+
+/// The actual element layer.
+
+abstract class MapLayer<T extends MapLayerDescription> {
+  final String id;
+
+  T _description;
+
+  T get description => _description;
+
+  MapLayer(this.id, T description) : _description = description;
+
+  // Will be set by the MapLayerManager
+
   MaplibreMapController? _controller;
 
   MaplibreMapController get controller => _controller!;
 
   Future<void> register();
 
+  Future<void> _update(T description) async {
+    final old = _description;
+    _description = description;
+    return update(old);
+  }
+
+  Future<void> update(T oldDescription);
+
   Future<void> unregister();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is MapLayer<T> && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 
 
-mixin MapLayerStyleSupport on MapLayer {
+mixin MapLayerStyleSupport<T extends MapLayerDescription> on MapLayer<T> {
   Future<void> addJSONLayers(List<Map<String, dynamic>> layers, { String? belowLayerId }) async {
     await Future.wait(
       layers.map(
