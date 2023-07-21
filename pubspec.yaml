@@ -21,6 +21,12 @@ dependencies:
   get_it: ^7.6.0
   mobx: ^2.2.0
   flutter_mobx: ^2.0.6+5
+  easylocate_flutter_sdk:
+    path: ./easylocate_flutter_sdk
+
+dependency_overrides:
+    ffi: ^2.0.1
+    xml: 6.0.1
 
 dev_dependencies:
   flutter_test:
