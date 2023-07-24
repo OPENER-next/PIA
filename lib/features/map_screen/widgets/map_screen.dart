@@ -1,84 +1,35 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide View;
+import 'package:flutter_mvvm_architecture/base.dart';
+import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:pia/features/map_screen/widgets/overlay/map_overlay.dart';
 
+import '../view_models/map_screen_view_model.dart';
 import '/shared/models/position.dart';
-import '/shared/utils/indoor_level_controller.dart';
 import 'map/map_view.dart';
-import 'map/map_layer_manager.dart';
-import 'map/layers/map_routing_layer.dart';
-import 'map/layers/map_indoor_layer.dart';
-import 'overlay/indoor_level_bar.dart';
 
 
-class MapScreen extends StatefulWidget {
-  @override
-  State<MapScreen> createState() => _MapScreenState();
-}
-
-class _MapScreenState extends State<MapScreen> {
-
-  final _levelController = IndoorLevelController(
-    levels: {
-      Level.fromNumber(-1): '-1',
-      Level.fromNumber(0): 'EG',
-      Level.fromNumber(1): 'OG1',
-      Level.fromNumber(2): 'OG2',
-      Level.fromNumber(3): 'OG3',
-    },
-  );
-
-  late final _mapLayerManager = MapLayerManager([
-    MapIndoorLayer(_levelController),
-    MapRoutingLayer([
-      Position( 51.0257624, 13.7227283, level: 1 ),
-      Position( 51.0256934, 13.7231176, level: 1 ),
-      Position( 51.0254485, 13.7230115, level: 1 ),
-      Position( 51.0253990, 13.7232873, level: 1 ),
-      Position( 51.0253433, 13.7232624, level: 1 ),
-      Position( 51.0253433, 13.7232624, level: 0 ),
-      Position( 51.0252868, 13.7232387, level: 0 ),
-      Position( 51.0253017, 13.7231613, level: 0 ),
-      Position( 51.0255040, 13.7232477, level: 0 ),
-    ]),
-  ]);
+class MapScreen extends View<MapViewModel> {
+  MapScreen({ super.key }) : super(create: MapViewModel.new);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, viewModel) {
     return MapView(
       styleUrl: 'https://api.maptiler.com/maps/bright-v2/style.json?key=3Uam2soS3S9RCPvHdP7E',
-      mapLayerManager: _mapLayerManager,
-      overlayBuilder: (context, controller) {
-        return Padding(
-          padding: MediaQuery.of(context).padding + EdgeInsets.all(10),
-          child: Stack(
-            children: [
-              AnimatedBuilder(
-                animation: controller,
-                builder: (_, child) => AnimatedSwitcher(
-                  duration: Duration(milliseconds: 300),
-                  child: controller.cameraPosition!.zoom >= 16 ? child : null,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: AnimatedBuilder(
-                    animation: _levelController,
-                    builder: (_, __) => IndoorLevelBar(
-                      levels: _levelController.levels,
-                      active: _levelController.level,
-                      onSelect: _levelController.changeLevel,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+      mapLayerManager: viewModel.mapLayerManager,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(52.13079444242991, 11.627435088157656),
+        zoom: 17,
+        tilt: 180, // will be clamped to max tilt
+      ),
+      onMapLongClick: (p0, position) async {
+        viewModel.setTargetLocation(
+          Position(position.latitude, position.longitude),
         );
       },
+      overlayBuilder: (context, controller) {
+        viewModel.mapController = controller;
+        return MapOverlay();
+      }
     );
-  }
-
-  @override
-  void dispose() {
-    _levelController.dispose();
-    super.dispose();
   }
 }

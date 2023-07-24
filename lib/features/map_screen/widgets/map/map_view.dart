@@ -18,16 +18,24 @@ class MapView extends StatefulWidget {
 
   final MapLayerManager? mapLayerManager;
 
-  final LatLng initialPosition;
+  final CameraPosition initialCameraPosition;
 
-  final double initialZoom;
+  final void Function(Point<double>, LatLng)? onMapClick;
+
+  final void Function(Point<double>, LatLng)? onMapLongClick;
 
   const MapView({
     required this.styleUrl,
     this.mapLayerManager,
     this.overlayBuilder,
-    this.initialPosition = const LatLng(51.02549, 13.72344),
-    this.initialZoom = 17,
+    this.initialCameraPosition = const CameraPosition(
+      bearing: 0.0,
+      target: LatLng(51.02549, 13.72344),
+      tilt: 0.0,
+      zoom: 17,
+    ),
+    this.onMapClick,
+    this.onMapLongClick,
   });
 
   @override
@@ -46,11 +54,10 @@ class _MapViewState extends State<MapView> {
     return Stack(
       children: [
         MaplibreMap(
+          onMapClick: widget.onMapClick,
+          onMapLongClick: widget.onMapLongClick,
           onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: widget.initialPosition,
-            zoom: widget.initialZoom,
-          ),
+          initialCameraPosition: widget.initialCameraPosition,
           trackCameraPosition: true,
           onStyleLoadedCallback: _onStyleLoaded,
           styleString: widget.styleUrl,
