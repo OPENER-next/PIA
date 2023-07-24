@@ -15,12 +15,10 @@ import 'package:mobx/mobx.dart';
 
 class IndoorPositioningService implements Disposable {
   IndoorPositioningService({
-    required double referenceLatitude,
-    required double referenceLongitude,
-    required double referenceAzimuth,
-  })  : _referenceLatitude = Observable(referenceLatitude),
-        _referenceLongitude = Observable(referenceLongitude),
-        _referenceAzimuth = Observable(referenceAzimuth);
+    required this.referenceLatitude,
+    required this.referenceLongitude,
+    required this.referenceAzimuth,
+  });
 
   factory IndoorPositioningService.fromJson(Map<String, dynamic> json) =>
       IndoorPositioningService(
@@ -29,28 +27,14 @@ class IndoorPositioningService implements Disposable {
         referenceAzimuth: json['originAzimuth'],
       );
 
-  late final updateWgs84Parameters =
-      Action((IndoorPositioningService positioningService) {
-    _referenceLatitude.value = positioningService.referenceLatitude;
-    _referenceLongitude.value = positioningService.referenceLongitude;
-    _referenceAzimuth.value = positioningService.referenceAzimuth;
-    debugPrint('Wgs84 Parameters Updated');
-  });
-
   /// Latitude of the origin
-  final Observable<double> _referenceLatitude;
-
-  double get referenceLatitude => _referenceLatitude.value;
+  final double referenceLatitude;
 
   /// Longitude of the origin
-  final Observable<double> _referenceLongitude;
-
-  double get referenceLongitude => _referenceLongitude.value;
+  final double referenceLongitude;
 
   /// Azimuth of the origin
-  final Observable<double> _referenceAzimuth;
-
-  double get referenceAzimuth => _referenceAzimuth.value;
+  final double referenceAzimuth;
 
   // ------------------  Connection Status -------------------//
 
