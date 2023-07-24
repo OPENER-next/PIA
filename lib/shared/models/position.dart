@@ -21,4 +21,15 @@ class Position extends LatLng {
 
   @override
   String toString() => 'Position(lat: $latitude, lon: $longitude, level: $level)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Position &&
+      super == other && other.level == level;
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ level.hashCode;
 }
