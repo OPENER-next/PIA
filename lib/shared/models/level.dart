@@ -21,7 +21,9 @@ class Level implements Comparable<Level> {
   static const zero = Level._('0');
 
   static String _removeTrailingZeros(String s)
-    => s.replaceFirst(RegExp(r'\.?0+$'), '');
+    // (?<=\.\d*)(0+$) - Match zeros at the end of a decimal number like 1.040 or 0.00600
+    // (\.0+$) - Match zeros and comma at the end of decimal number like 1.00 or 10.0
+    => s.replaceFirst(RegExp(r'(?<=\.\d*)(0+$)|(\.0+$)'), '');
 
   String toLowerInteger() => asNumber.floor().toString();
 
