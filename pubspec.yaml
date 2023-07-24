@@ -24,8 +24,15 @@ dependencies:
   easylocate_flutter_sdk:
     path: ./easylocate_flutter_sdk
 
+# To prevent version solving in PIA
 dependency_overrides:
+    # ffi ^2.0.1 is used as an override because PIA depends on the easylocate_flutter_sdk from path, which depends on flutter_libserialport from path  & quick_blue ^0.4.1+1, which require different version of ffi
+    #  flutter_libserialport dependencies [libserialport from path -> ffi ^2.0.1]
+    #  quick_blue dependencies [quick_blue ^0.4.1+1 -> quick_blue_linux ^0.1.2 -> bluez ^0.7.9 -> dbus ^0.6.0 ->  ffi ^1.1.2]
     ffi: ^2.0.1
+    # xml ^6.0.1 is used as an override because PIA depends on imaplibre_gl from git and the easylocate_flutter_sdk from path, both of which use different version of xml
+    # imaplibre_gl dependencies [image ^4.0.17 -> xml ^6.0.1]
+    # easyLocateFlutterSDK dependencies [quick_blue ^0.4.1+1 -> quick_blue_linux ^0.1.2 -> bluez ^0.7.9 -> dbus ^0.6.0 ->  xml ^5.0.0]
     xml: 6.0.1
 
 dev_dependencies:
