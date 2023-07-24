@@ -192,7 +192,7 @@ const layers = [
   // Indoor routing \\
 
   {
-    'id': 'indoor-routing-path2',
+    'id': 'indoor-routing-path',
     'source': 'indoor-routing-path',
     'type': 'line',
     'filter': [
@@ -208,7 +208,7 @@ const layers = [
     },
   },
   {
-    'id': 'indoor-routing-path',
+    'id': 'indoor-routing-path-outline',
     'source': 'indoor-routing-path',
     'type': 'line',
     'filter': [
@@ -222,6 +222,37 @@ const layers = [
     'paint': {
       'line-color': '#0077c2',
       'line-width': 2,
+    },
+  },
+
+  {
+    'id': 'indoor-position-shadow',
+    'source': 'indoor-position',
+    "type": "circle",
+    'filter': [
+      'all',
+    ],
+    "paint": {
+      "circle-radius": 17,
+      "circle-opacity": 0.7,
+      "circle-color": "#000",
+      "circle-blur": 1,
+      'circle-pitch-alignment': 'map',
+    },
+  },
+  {
+    'id': 'indoor-position',
+    'source': 'indoor-position',
+    'type': 'circle',
+    'filter': [
+      'all',
+    ],
+    'paint': {
+      'circle-radius': 8,
+      'circle-color': '#42a5f5',
+      'circle-stroke-width': 4,
+      'circle-stroke-color': '#fff',
+      'circle-pitch-alignment': 'map',
     },
   },
 
