@@ -54,17 +54,26 @@ class Route {
 
   Iterable<Position> get indoorPath sync* {
     final iter = edges.iterator;
+    late RoutingEdge previousEdge;
+
     if (iter.moveNext()) {
-      final edge = iter.current;
-      yield* edge.path
-        .map((p) => Position(p.latitude, p.longitude, level: edge.level));
+      previousEdge = iter.current;
+      yield* previousEdge.path
+        .map((p) => Position(p.latitude, p.longitude, level: previousEdge.level));
     }
 
     while(iter.moveNext()) {
       final edge = iter.current;
-      yield* edge.path
-        .skip(1) // skip first position since it is identical to the last position of the previous edge
+      // skip first position since it is identical to the last position of the previous edge
+      // if the edges have the same level
+      final path = previousEdge.level == edge.level
+        ? edge.path.skip(1)
+        : edge.path;
+
+      yield* path
         .map((p) => Position(p.latitude, p.longitude, level: edge.level));
+
+      previousEdge = edge;
     }
   }
 }
