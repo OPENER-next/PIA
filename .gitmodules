@@ -1,0 +1,3 @@
+[submodule "easylocate_flutter_sdk"]
+	path = easylocate_flutter_sdk
+	url = https://gitlab.pinpoint.de/easylocate/apps/pinpoint-flutter-sdk
