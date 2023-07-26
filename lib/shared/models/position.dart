@@ -1,4 +1,4 @@
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'level.dart';
 
@@ -15,6 +15,8 @@ class Position extends LatLng {
     'lat': latitude,
     'lng': longitude,
   };
+
+  List<double> toGeoJsonCoordinates() => [longitude, latitude];
 
   factory Position.fromGeoJsonCoordinates(List<double> json) =>
     Position(json[1], json[0]);

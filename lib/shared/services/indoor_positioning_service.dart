@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 
 import 'package:mobx/mobx.dart';
 
+import '../models/position.dart';
+
 /// Provides functionality to connect to a uwb tracelet, and receive position values
 
 /// To start positioning use the function[connectTracelet].
@@ -45,10 +47,10 @@ class IndoorPositioningService implements Disposable {
 
   // ------------------  Current Wgs84 Position -------------------//
 
-  final Observable<Wgs84Position?> _wgs84Position = Observable(null);
+  final Observable<Position?> _wgs84Position = Observable(null);
 
   /// Returns the current wgs84 position from a tracelet. If no position found returns null
-  Wgs84Position? get wgs84position => _wgs84Position.value;
+  Position? get wgs84position => _wgs84Position.value;
 
   // ------------------  EasyLocate SDK -------------------//
 
@@ -137,7 +139,7 @@ class IndoorPositioningService implements Disposable {
                 PositionListener(
                   onWgs84PositionUpdated: (position) {
                     runInAction(
-                      () => _wgs84Position.value = position,
+                      () => _wgs84Position.value = Position(position.lat, position.lon),
                     );
                   },
                 ),
