@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'screens/map_screen/map_screen.dart';
+import 'features/map_screen/widgets/map_screen.dart';
 
 void main() {
   // required for system chrome

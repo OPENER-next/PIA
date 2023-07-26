@@ -22,8 +22,8 @@ class MapScreen extends View<MapViewModel> {
         tilt: 180, // will be clamped to max tilt
       ),
       onMapLongClick: (p0, position) async {
-        viewModel.setTargetLocation(
-          Position(position.latitude, position.longitude),
+        viewModel.destinationPosition = Position(
+          position.latitude, position.longitude
         );
       },
       overlayBuilder: (context, controller) {

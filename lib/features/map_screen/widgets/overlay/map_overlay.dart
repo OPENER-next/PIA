@@ -38,6 +38,13 @@ class MapOverlay extends ViewFragment<MapViewModel> {
               ),
             ),
           ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: FloatingActionButton.small(
+              child: Icon(Icons.wifi_find_rounded),
+              onPressed: viewModel.connectToTracelet,
+            ),
+          ),
         ],
       ),
     );
