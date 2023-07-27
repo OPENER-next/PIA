@@ -58,10 +58,10 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
+            //Setting the minifyEnabled to true includes the rules for proguard.
+            minifyEnabled true
             // Add the ProGuard rules to prevent scanning errors from Flutter Blue Plus when
-            // running the app in release mode
-            // Issue: https://github.com/pauldemarco/flutter_blue/issues/662#issuecomment-872407373
-            minifyEnabled true       // this line
+            // running the app in release mode (https://pub.dev/packages/flutter_blue_plus)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
