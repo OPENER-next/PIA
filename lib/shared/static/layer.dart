@@ -1,3 +1,9 @@
+// When editing these layers, styles and filters always use the new expression syntax
+// more info here https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/
+// not the old one: https://docs.mapbox.com/mapbox-gl-js/style-spec/other/#other-filter
+// Otherwise if errors like 'Invalid filter value: filter property must be a string' may occur
+// when both syntaxes are mixed.
+
 const commonPoi = {
   'type': 'symbol',
   'source-layer': 'poi',
@@ -6,45 +12,19 @@ const commonPoi = {
       'coalesce',
       [
         'image',
-        [
-          'concat',
-          [
-            'literal',
-            'indoorequal-'
-          ],
-          [
-            'get',
-            'subclass'
-          ]
-        ],
+        ['concat', ['literal', 'indoorequal-'], ['get', 'subclass']]
       ],
-      [
-        'image',
-        [
-          'concat',
-          [
-            'literal',
-            'indoorequal-'
-          ],
-          [
-            'get',
-            'class'
-          ]
-        ]
-      ]
+      ['image', ['concat', ['literal', 'indoorequal-'], ['get', 'class']]]
     ],
     'text-anchor': 'top',
     'text-field': [
       'concat',
       ['get', 'name:latin'],
       '\n',
-      ['get', 'name:nonlatin'],
+      ['get', 'name:nonlatin']
     ],
     'text-max-width': 9,
-    'text-offset': [
-      0,
-      0.6
-    ],
+    'text-offset': [0, 0.6],
     'text-padding': 2,
     'text-size': 12
   },
@@ -60,7 +40,7 @@ const rank2Class = ['waste_basket', 'information', 'vending_machine', 'bench', '
 
 const layers = [
 
-    // Indoor areas \\
+  // Indoor areas \\
 
   {
     'id': 'indoor-polygon',
@@ -69,36 +49,44 @@ const layers = [
     'source-layer': 'area',
     'filter': [
       'all',
-      [
-        '==',
-        r'$type',
-        'Polygon'
-      ],
-      [
-        '!=',
-        'class',
-        'level'
-      ]
+      ['==', ['geometry-type'], 'Polygon'],
+      ['!=', ['get', 'class'], 'level']
     ],
     'paint': {
       'fill-color': [
         'case',
-        // if private
-        ['all', ['has', 'access'], ['in', ['get', 'access'], ['literal', ['no', 'private']]]],
+        [
+          'all',
+          ['has', 'access'],
+          ['in', ['get', 'access'], ['literal', ['no', 'private']]]
+        ],
         '#F2F1F0',
-        // if POI
-        ['any',
-         ['all', ['==', ['get', 'is_poi'], true], ['!=', ['get', 'class'], 'corridor']],
-         [
-           'in',
-           ['get', 'subclass'],
-           ['literal', ['class', 'laboratory', 'office', 'auditorium', 'amphitheatre', 'reception']]]
+        [
+          'any',
+          [
+            'all',
+            ['==', ['get', 'is_poi'], true],
+            ['!=', ['get', 'class'], 'corridor']
+          ],
+          [
+            'in',
+            ['get', 'subclass'],
+            [
+              'literal',
+              [
+                'class',
+                'laboratory',
+                'office',
+                'auditorium',
+                'amphitheatre',
+                'reception'
+              ]
+            ]
+          ]
         ],
         '#D4EDFF',
-        // if is a room
         ['==', ['get', 'class'], 'room'],
         '#f0e8f8',
-        // default
         '#fdfcfa'
       ]
     }
@@ -109,18 +97,15 @@ const layers = [
     'type': 'line',
     'source-layer': 'area',
     'filter': [
-      'all',
-      [
-        'in',
-        'class',
-        'area',
-        'corridor',
-        'platform'
-      ]
+      'match',
+      ['get', 'class'],
+      ['area', 'corridor', 'platform'],
+      true,
+      false
     ],
     'paint': {
       'line-color': '#bfbfbf',
-      'line-width': 1
+      'line-width': 1,
     }
   },
   {
@@ -128,14 +113,7 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'fill',
     'source-layer': 'area',
-    'filter': [
-      'all',
-      [
-        '==',
-        'class',
-        'column'
-      ]
-    ],
+    'filter': ['==', ['get', 'class'], 'column'],
     'paint': {
       'fill-color': '#bfbfbf'
     }
@@ -145,47 +123,30 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'area',
-    'filter': [
-      'all',
-      [
-        'in',
-        'class',
-        'room',
-        'wall'
-      ]
-    ],
+    'filter': ['match', ['get', 'class'], ['room', 'wall'], true, false],
     'paint': {
       'line-color': '#bfbfbf',
-      'line-width': 1
-    }
+      'line-width': 1,
+    },
   },
   {
     'id': 'indoor-transportation',
     'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'transportation',
-    'filter': [
-      'all'
-    ],
+    'filter': ['all'],
     'paint': {
       'line-color': 'gray',
-      'line-dasharray': [
-        0.4,
-        0.75
+      'line-dasharray': [0.4, 0.75],
+      'line-width': [
+        'interpolate',
+        ['exponential', 1.4],
+        ['zoom'],
+        17,
+        2,
+        20,
+        10,
       ],
-      'line-width': {
-        'base': 1.4,
-        'stops': [
-          [
-            17,
-            2
-          ],
-          [
-            20,
-            10
-          ]
-        ]
-      }
     }
   },
 
@@ -195,9 +156,7 @@ const layers = [
     'id': 'indoor-routing-path',
     'source': 'indoor-routing-path',
     'type': 'line',
-    'filter': [
-      'all',
-    ],
+    'filter': ['all'],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -211,13 +170,10 @@ const layers = [
     'id': 'indoor-routing-path-outline',
     'source': 'indoor-routing-path',
     'type': 'line',
-    'filter': [
-      'all',
-    ],
+    'filter': ['all'],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
-      'line-gap-width': 5
     },
     'paint': {
       'line-color': '#0077c2',
@@ -228,15 +184,13 @@ const layers = [
   {
     'id': 'indoor-position-shadow',
     'source': 'indoor-position',
-    "type": "circle",
-    'filter': [
-      'all',
-    ],
-    "paint": {
-      "circle-radius": 17,
-      "circle-opacity": 0.7,
-      "circle-color": "#000",
-      "circle-blur": 1,
+    'type': 'circle',
+    'filter': ['all'],
+    'paint': {
+      'circle-radius': 17,
+      'circle-opacity': 0.7,
+      'circle-color': '#000',
+      'circle-blur': 1,
       'circle-pitch-alignment': 'map',
     },
   },
@@ -244,9 +198,7 @@ const layers = [
     'id': 'indoor-position',
     'source': 'indoor-position',
     'type': 'circle',
-    'filter': [
-      'all',
-    ],
+    'filter': ['all'],
     'paint': {
       'circle-radius': 8,
       'circle-color': '#42a5f5',
@@ -265,39 +217,21 @@ const layers = [
     'source-layer': 'transportation',
     'filter': [
       'all',
+      ['match', ['geometry-type'], ['LineString', 'Point'], true, false],
       [
-        'in',
-        r'$type',
-        'Point',
-        'LineString'
-      ],
-      [
-        'in',
-        'class',
-        'steps',
-        'elevator',
-        'escalator'
+        'match',
+        ['get', 'class'],
+        ['elevator', 'escalator', 'steps'],
+        true,
+        false
       ]
     ],
     'layout': {
       'icon-image': [
         'case',
-        [
-          'has',
-          'conveying'
-        ],
+        ['has', 'conveying'],
         'indoorequal-escalator',
-        [
-          'concat',
-          [
-            'literal',
-            'indoorequal-'
-          ],
-          [
-            'get',
-            'class'
-          ]
-        ]
+        ['concat', ['literal', 'indoorequal-'], ['get', 'class']]
       ],
       'symbol-placement': 'line-center',
       'icon-rotation-alignment': 'viewport'
@@ -309,15 +243,13 @@ const layers = [
     ...commonPoi,
     'filter': [
       'all',
+      ['==', ['geometry-type'], 'Point'],
       [
-        '==',
-        r'$type',
-        'Point'
-      ],
-      [
-        '!in',
-        'class',
-        ...rank2Class
+        'match',
+        ['get', 'class'],
+        rank2Class,
+        false,
+        true
       ]
     ]
   },
@@ -328,35 +260,28 @@ const layers = [
     'minzoom': 19,
     'filter': [
       'all',
+      ['==', ['geometry-type'], 'Point'],
       [
-        '==',
-        r'$type',
-        'Point'
-      ],
-      [
-        'in',
-        'class',
-        ...rank2Class
+        'match',
+        ['get', 'class'],
+        rank2Class,
+        true,
+        false
       ]
-    ]
+    ],
   },
   {
     'id': 'indoor-name',
     'source': 'indoor-vector-tiles',
     'type': 'symbol',
     'source-layer': 'area_name',
-    'filter': [
-      'all'
-    ],
+    'filter': ['all'],
     'layout': {
       'text-field': [
         'concat',
-        ['coalesce',
-         ['get', 'name:latin'],
-         ['get', 'ref'],
-        ],
+        ['coalesce', ['get', 'name:latin'], ['get', 'ref']],
         '\n',
-        ['get', 'name:nonlatin'],
+        ['get', 'name:nonlatin']
       ],
       'text-max-width': 5,
       'text-size': 14
