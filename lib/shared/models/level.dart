@@ -25,10 +25,6 @@ class Level implements Comparable<Level> {
     // (\.0+$) - Match zeros and comma at the end of decimal number like 1.00 or 10.0
     => s.replaceFirst(RegExp(r'(?<=\.\d*)(0+$)|(\.0+$)'), '');
 
-  String toLowerInteger() => asNumber.floor().toString();
-
-  String toUpperInteger() => asNumber.ceil().toString();
-
   num get asNumber => num.parse(_level);
 
   @override

@@ -12,7 +12,7 @@ import '/shared/models/per_pedes_routing/ppr.dart';
 import '/shared/models/level.dart';
 import '/shared/services/ppr_service.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '../widgets/map/layers/map_indoor_layer.dart';
+import '../widgets/map/layers/map_indoor_layer/map_indoor_layer.dart';
 import '../widgets/map/layers/map_indoor_position_layer.dart';
 import '../widgets/map/layers/map_routing_layer.dart';
 import '../widgets/map/map_layer_manager.dart';

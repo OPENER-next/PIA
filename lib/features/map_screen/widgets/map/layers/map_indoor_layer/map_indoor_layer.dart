@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:maplibre_gl/mapbox_gl.dart';
 
-import '/shared/static/layer.dart';
+import 'style_definition.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '../map_layer_manager.dart';
+import '../../map_layer_manager.dart';
 
 class MapIndoorLayer implements MapLayerDescription {
   final IndoorLevelController levelController;
@@ -51,16 +51,23 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
   /// Update the map filter for the provided layers based on the level controllers level.
 
   Future<void> _handleLevelChange() async {
+    final level = description.levelController.level.asNumber.toInt();
+    // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+    final levelFilter = [
+      'any',
+      ['==', ['ceil', ['to-number', ['get', 'level']]], level],
+      ['==', ['floor', ['to-number', ['get', 'level']]], level],
+    ];
     await Future.wait(
       layers.map(
-        (layer) => controller.setFilter(layer['id'] as String,
-          // combine existing layer filter with additional filter for level
-          [
-            ...(layer['filter'] as List<dynamic>? ?? ['all']),
-            // without toString the filter won't work
-            ['==', 'level', description.levelController.level.toString()]
-          ],
-        ),
+        (layer) {
+          final newFilter = [
+            'all',
+            if (layer['filter'] is List<dynamic>) layer['filter'],
+            levelFilter
+          ];
+          return controller.setFilter(layer['id'] as String, newFilter);
+        }
       )
     );
   }
