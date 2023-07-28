@@ -153,6 +153,20 @@ const layers = [
   // Indoor routing \\
 
   {
+    'id': 'indoor-routing-path-outline',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': ['all'],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#0077c2',
+      'line-width': 7,
+    },
+  },
+  {
     'id': 'indoor-routing-path',
     'source': 'indoor-routing-path',
     'type': 'line',
@@ -164,20 +178,6 @@ const layers = [
     'paint': {
       'line-color': '#42a5f5',
       'line-width': 5,
-    },
-  },
-  {
-    'id': 'indoor-routing-path-outline',
-    'source': 'indoor-routing-path',
-    'type': 'line',
-    'filter': ['all'],
-    'layout': {
-      'line-join': 'round',
-      'line-cap': 'round',
-    },
-    'paint': {
-      'line-color': '#0077c2',
-      'line-width': 2,
     },
   },
 

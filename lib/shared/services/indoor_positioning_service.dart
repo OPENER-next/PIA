@@ -4,6 +4,7 @@ import 'package:easylocate_flutter_sdk/cmds/commands.dart';
 import 'package:easylocate_flutter_sdk/easylocate_sdk.dart';
 import 'package:easylocate_flutter_sdk/tracelet_api.dart';
 import 'package:flutter/material.dart' hide Action;
+import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:mobx/mobx.dart';
@@ -11,11 +12,11 @@ import 'package:mobx/mobx.dart';
 import '../models/position.dart';
 
 /// Provides functionality to connect to a uwb tracelet, and receive position values
+///
+/// To start positioning use the function [connectTracelet].
+/// To stop positioning use the function [disconnectTracelet].
 
-/// To start positioning use the function[connectTracelet].
-/// To stop positioning use the function[disconnectTracelet].
-
-class IndoorPositioningService implements Disposable {
+class IndoorPositioningService extends Service implements Disposable {
   IndoorPositioningService({
     required this.referenceLatitude,
     required this.referenceLongitude,

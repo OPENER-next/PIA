@@ -14,6 +14,7 @@ class Position extends LatLng {
   Map<String, double> toJson() => {
     'lat': latitude,
     'lng': longitude,
+    'level': level.asNumber.toDouble(),
   };
 
   List<double> toGeoJsonCoordinates() => [longitude, latitude];
