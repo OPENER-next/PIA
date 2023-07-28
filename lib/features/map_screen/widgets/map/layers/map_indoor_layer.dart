@@ -4,7 +4,7 @@ import 'package:maplibre_gl/mapbox_gl.dart';
 
 import 'style_definition.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '../../map_layer_manager.dart';
+import '../map_layer_manager.dart';
 
 class MapIndoorLayer implements MapLayerDescription {
   final IndoorLevelController levelController;
