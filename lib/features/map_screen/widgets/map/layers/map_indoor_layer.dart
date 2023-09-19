@@ -47,29 +47,48 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
     await removeJSONLayers(layers);
   }
 
-
   /// Update the map filter for the provided layers based on the level controllers level.
 
   Future<void> _handleLevelChange() async {
-    final level = description.levelController.level.asNumber.toInt();
-    // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
-    final levelFilter = [
-      'any',
-      ['==', ['ceil', ['to-number', ['get', 'level']]], level],
-      ['==', ['floor', ['to-number', ['get', 'level']]], level],
-    ];
     await Future.wait(
-      layers.map(
-        (layer) {
-          final newFilter = [
-            'all',
-            if (layer['filter'] is List<dynamic>) layer['filter'],
-            levelFilter
-          ];
-          return controller.setFilter(layer['id'] as String, newFilter);
-        }
-      )
+      layers
+      .where((layer) => layer['filter'] is List)
+      .map((layer) {
+        final newFilter = _nestedReplaceWhere(
+          layer['filter'] as List,
+          _levelVariableReplacer,
+        );
+        return controller.setFilter(layer['id'] as String, newFilter);
+      }),
     );
+  }
+
+  /// Substitutes occurrences of `["let", "level", "0", ...]` with the current level.
+
+  dynamic _levelVariableReplacer(dynamic item) {
+    if (item is List && item[0] == 'let' && item[1] == 'level') {
+      final level = description.levelController.level.asNumber.toInt();
+      return [item[0], item[1], level, ...item.skip(3)];
+    }
+    return item;
+  }
+
+  /// Recursively replaces items in a nested List based on a replacer function.
+  ///
+  /// In this case it is used to replace values in mapbox expressions.
+  ///
+  /// This returns a new List with nested List.
+
+  List _nestedReplaceWhere(List nestedLists, Function(dynamic item) replacer) {
+    // run replacer once for every list (including top level list)
+    nestedLists = replacer(nestedLists);
+    return nestedLists.map<dynamic>((item) {
+      if (item is List) {
+        return _nestedReplaceWhere(item, replacer);
+      }
+      // run replacer for every list item and sub items
+      return replacer(item);
+    }).toList(growable: false);
   }
 }
 

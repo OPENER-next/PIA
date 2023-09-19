@@ -49,6 +49,16 @@ const layers = [
     'source-layer': 'area',
     'filter': [
       'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
       ['==', ['geometry-type'], 'Polygon'],
       ['!=', ['get', 'class'], 'level']
     ],
@@ -97,11 +107,24 @@ const layers = [
     'type': 'line',
     'source-layer': 'area',
     'filter': [
-      'match',
-      ['get', 'class'],
-      ['area', 'corridor', 'platform'],
-      true,
-      false
+      'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+      [
+        'match',
+        ['get', 'class'],
+        ['area', 'corridor', 'platform'],
+        true,
+        false
+      ],
     ],
     'paint': {
       'line-color': '#bfbfbf',
@@ -113,7 +136,21 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'fill',
     'source-layer': 'area',
-    'filter': ['==', ['get', 'class'], 'column'],
+    'filter': [
+      'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+
+      ['==', ['get', 'class'], 'column']
+    ],
     'paint': {
       'fill-color': '#bfbfbf'
     }
@@ -123,7 +160,20 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'area',
-    'filter': ['match', ['get', 'class'], ['room', 'wall'], true, false],
+    'filter': [
+      'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+      ['match', ['get', 'class'], ['room', 'wall'], true, false]
+    ],
     'paint': {
       'line-color': '#bfbfbf',
       'line-width': 1,
@@ -134,7 +184,16 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'line',
     'source-layer': 'transportation',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'paint': {
       'line-color': 'gray',
       'line-dasharray': [0.4, 0.75],
@@ -150,13 +209,22 @@ const layers = [
     }
   },
 
-  // Indoor routing \\
+  // Indoor routing - Current Level \\
 
   {
-    'id': 'indoor-routing-path-outline',
+    'id': 'indoor-routing-path-outline-current',
     'source': 'indoor-routing-path',
     'type': 'line',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -167,10 +235,19 @@ const layers = [
     },
   },
   {
-    'id': 'indoor-routing-path',
+    'id': 'indoor-routing-path-current',
     'source': 'indoor-routing-path',
     'type': 'line',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -185,7 +262,16 @@ const layers = [
     'id': 'indoor-position-shadow',
     'source': 'indoor-position',
     'type': 'circle',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'paint': {
       'circle-radius': 17,
       'circle-opacity': 0.7,
@@ -198,7 +284,16 @@ const layers = [
     'id': 'indoor-position',
     'source': 'indoor-position',
     'type': 'circle',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'paint': {
       'circle-radius': 8,
       'circle-color': '#42a5f5',
@@ -217,6 +312,17 @@ const layers = [
     'source-layer': 'transportation',
     'filter': [
       'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+
       ['match', ['geometry-type'], ['LineString', 'Point'], true, false],
       [
         'match',
@@ -243,6 +349,17 @@ const layers = [
     ...commonPoi,
     'filter': [
       'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+
       ['==', ['geometry-type'], 'Point'],
       [
         'match',
@@ -260,6 +377,17 @@ const layers = [
     'minzoom': 19,
     'filter': [
       'all',
+      // indoor level matching - start \\
+      [
+        'let', 'level', 0, [
+          // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+          'any',
+          ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+          ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ]
+      ],
+      // indoor level matching - end \\
+
       ['==', ['geometry-type'], 'Point'],
       [
         'match',
@@ -275,7 +403,16 @@ const layers = [
     'source': 'indoor-vector-tiles',
     'type': 'symbol',
     'source-layer': 'area_name',
-    'filter': ['all'],
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        // show features with level 0.5; 0.3; 0.7 on level 0 and on level 1
+        'any',
+        ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
     'layout': {
       'text-field': [
         'concat',
