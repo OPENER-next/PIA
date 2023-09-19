@@ -58,8 +58,9 @@ class Route {
 
     if (iter.moveNext()) {
       previousEdge = iter.current;
-      yield* previousEdge.path
-        .map((p) => Position(p.latitude, p.longitude, level: previousEdge.level));
+      yield* previousEdge.path.map(
+        (p) => Position(p.latitude, p.longitude, level: previousEdge.level),
+      );
     }
 
     while(iter.moveNext()) {
@@ -70,8 +71,9 @@ class Route {
         ? edge.path.skip(1)
         : edge.path;
 
-      yield* path
-        .map((p) => Position(p.latitude, p.longitude, level: edge.level));
+      yield* path.map(
+        (p) => Position(p.latitude, p.longitude, level: edge.level),
+      );
 
       previousEdge = edge;
     }

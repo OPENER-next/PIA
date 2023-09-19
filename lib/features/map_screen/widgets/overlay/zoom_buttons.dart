@@ -5,10 +5,10 @@ class ZoomButtons extends StatelessWidget {
   final void Function()? onZoomOutPressed;
 
   const ZoomButtons({
-    Key? key,
+    super.key,
     this.onZoomInPressed,
     this.onZoomOutPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -9,10 +9,10 @@ class MapOverlay extends ViewFragment<MapViewModel> {
   final void Function()? onZoomOutPressed;
 
   const MapOverlay({
-    Key? key,
+    super.key,
     this.onZoomInPressed,
     this.onZoomOutPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, viewModel) {
