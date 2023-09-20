@@ -40,6 +40,53 @@ const rank2Class = ['waste_basket', 'information', 'vending_machine', 'bench', '
 
 const layers = [
 
+  // Indoor routing - Below current level \\
+
+  {
+    'id': 'indoor-routing-path-outline-below',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        'all',
+        ['<', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['<', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#555555',
+      'line-width': 7,
+    },
+  },
+  {
+    'id': 'indoor-routing-path-below',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        'all',
+        ['<', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['<', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#aaaaaa',
+      'line-width': 5,
+    },
+  },
+
   // Indoor areas \\
 
   {
@@ -209,7 +256,7 @@ const layers = [
     }
   },
 
-  // Indoor routing - Current Level \\
+  // Indoor routing - Current level \\
 
   {
     'id': 'indoor-routing-path-outline-current',
@@ -257,6 +304,55 @@ const layers = [
       'line-width': 5,
     },
   },
+
+  // Indoor routing - Above current level \\
+
+  {
+    'id': 'indoor-routing-path-outline-above',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        'all',
+        ['>', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['>', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#555555',
+      'line-width': 7,
+    },
+  },
+  {
+    'id': 'indoor-routing-path-above',
+    'source': 'indoor-routing-path',
+    'type': 'line',
+    'filter': [
+      // indoor level matching - start \\
+      'let', 'level', 0, [
+        'all',
+        ['>', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
+        ['>', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+      ]
+      // indoor level matching - end \\
+    ],
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': '#aaaaaa',
+      'line-width': 5,
+    },
+  },
+
+  // Indoor location indicator \\
 
   {
     'id': 'indoor-position-shadow',
