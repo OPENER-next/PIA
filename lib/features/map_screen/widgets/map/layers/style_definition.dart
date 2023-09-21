@@ -40,6 +40,23 @@ const rank2Class = ['waste_basket', 'information', 'vending_machine', 'bench', '
 
 const layers = [
 
+  // Underground backdrop layer \\
+
+  {
+    'id': 'indoor-tint-layer',
+    'source': 'indoor-tint-layer',
+    'type': 'fill',
+    'filter': [
+      'let', 'level', 0, [
+        '<', ['var', 'level'], 0
+      ],
+    ],
+    'paint': {
+      'fill-color': '#bfbfbf',
+    }
+  },
+
+
   // Indoor routing - Below current level \\
 
   {

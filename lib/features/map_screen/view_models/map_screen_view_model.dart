@@ -15,6 +15,7 @@ import '/shared/utils/indoor_level_controller.dart';
 import '../widgets/map/layers/map_indoor_layer.dart';
 import '../widgets/map/layers/map_indoor_position_layer.dart';
 import '../widgets/map/layers/map_routing_layer.dart';
+import '../widgets/map/layers/map_backdrop_layer.dart';
 import '../widgets/map/map_layer_manager.dart';
 
 class MapViewModel extends ViewModel with Reactor {
@@ -71,6 +72,7 @@ class MapViewModel extends ViewModel with Reactor {
 
   late final mapLayerManager = MapLayerManager({
     'indoor-vector-tiles': MapIndoorLayer(levelController: levelController),
+    'indoor-tint-layer': MapBackdropLayer(),
   });
 
 
