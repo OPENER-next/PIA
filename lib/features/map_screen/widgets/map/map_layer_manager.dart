@@ -47,6 +47,14 @@ class MapLayerManager {
     }
   }
 
+  /// Should be called on hot reload.
+
+  void reassemble() async {
+    for (final layer in _layers.values) {
+      await layer._update();
+    }
+  }
+
 
   Future<void> _registerLayers() async {
     for (final layer in _layers.values) {
@@ -108,7 +116,8 @@ abstract class MapLayer<T extends MapLayerDescription> {
 
   Future<void> register();
 
-  Future<void> _update(T description) async {
+  Future<void> _update([T? description]) async {
+    description ??= _description;
     final old = _description;
     _description = description;
     return update(old);

@@ -83,6 +83,11 @@ class _MapViewState extends State<MapView> {
     });
   }
 
+  void reassemble() async {
+    super.reassemble();
+    widget.mapLayerManager?.reassemble();
+  }
+
   @override
   void dispose() {
     _mapController?.dispose();

@@ -39,6 +39,11 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
       description.levelController.addListener(_handleLevelChange);
       await _handleLevelChange();
     }
+    else {
+      // reload layers on hot reload
+      await removeJSONLayers(layers);
+      await addJSONLayers(layers);
+    }
   }
 
   Future<void> unregister() async {
