@@ -24,6 +24,9 @@ dependencies:
   flutter_mobx: ^2.0.6+5
   easylocate_flutter_sdk:
     path: ./easylocate_flutter_sdk
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 # To prevent version solving in PIA
 dependency_overrides:
@@ -42,5 +45,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
 assets:
