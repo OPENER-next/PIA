@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import '/shared/models/level.dart';
-import '/shared/models/position.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import '../map_layer_manager.dart';
 
 

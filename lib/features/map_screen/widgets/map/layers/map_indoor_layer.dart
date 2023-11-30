@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 import 'style_definition.dart';
 import '/shared/utils/indoor_level_controller.dart';

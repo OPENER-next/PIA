@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide View;
 import 'package:flutter_mvvm_architecture/base.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pia/features/map_screen/widgets/overlay/map_overlay.dart';
 
 import '../view_models/map_screen_view_model.dart';

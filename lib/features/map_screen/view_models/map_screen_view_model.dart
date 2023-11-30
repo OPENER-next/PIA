@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:maplibre_gl/mapbox_gl.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:pia/shared/services/indoor_positioning_service.dart';
 
