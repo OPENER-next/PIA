@@ -49,35 +49,6 @@ class Route {
     edges = json['edges']
       ?.map<RoutingEdge>((item) => RoutingEdge.fromJson(item))
       .toList(growable: false) ?? const [];
-
-  /// This requires edges to be present, otherwise this will be empty.
-
-  Iterable<Position> get indoorPath sync* {
-    final iter = edges.iterator;
-    late RoutingEdge previousEdge;
-
-    if (iter.moveNext()) {
-      previousEdge = iter.current;
-      yield* previousEdge.path.map(
-        (p) => Position(p.latitude, p.longitude, level: previousEdge.level),
-      );
-    }
-
-    while(iter.moveNext()) {
-      final edge = iter.current;
-      // skip first position since it is identical to the last position of the previous edge
-      // if the edges have the same level
-      final path = previousEdge.level == edge.level
-        ? edge.path.skip(1)
-        : edge.path;
-
-      yield* path.map(
-        (p) => Position(p.latitude, p.longitude, level: edge.level),
-      );
-
-      previousEdge = edge;
-    }
-  }
 }
 
 
@@ -130,7 +101,14 @@ class RoutingStep {
   final int elevationUp;
   final int elevationDown;
   final bool inclineUp;
+  final int incline;
   final bool? handrail;
+
+  final String? doorType;
+  final String? automaticDoorType;
+  final String? trafficSignalsSound;
+  final String? trafficSignalsVibration;
+  final double maxWidth;
 
   final Duration durationPenalty;
   final double accessibilityPenalty;
@@ -153,78 +131,17 @@ class RoutingStep {
     elevationUp = json['elevation_up'],
     elevationDown = json['elevation_down'],
     inclineUp = json['incline_up'],
+    incline = json['incline'] ?? 0,
     handrail = json['handrail'],
+    doorType = json['door_type'],
+    automaticDoorType = json['door_type'],
+    trafficSignalsSound = json['traffic_signals_sound'],
+    trafficSignalsVibration = json['traffic_signals_vibration'],
+    maxWidth = json['max_width'] ?? double.infinity,
     durationPenalty = _durationFromSeconds(json['duration_penalty']),
     accessibilityPenalty = json['accessibility_penalty'],
     index = json['index'],
     path = json['path']
       ?.map<Position>((item) => Position.fromGeoJsonCoordinates(item.cast<double>()))
       .toList(growable: false) ?? const [];
-}
-
-
-/// An edge of a route with additional details.
-
-class RoutingEdge {
-  final String edgeType;
-  final String streetType;
-  final String crossingType;
-  final String side;
-
-  final int osmWayId;
-  final int fromNodeOsmId;
-  final int toNodeOsmId;
-
-  final String name;
-  final int markedCrossingDetour;
-
-  final double distance;
-  final Duration duration;
-  final double accessibility;
-
-  final List<Position> path;
-
-  final int elevationUp;
-  final int elevationDown;
-
-  final bool inclineUp;
-  final bool? handrail;
-
-  final Duration durationPenalty;
-  final double accessibilityPenalty;
-
-  final bool area;
-  final Level level;
-
-  RoutingEdge.fromJson(Map<String, dynamic> json) :
-    edgeType = json['edge_type'],
-    streetType = json['street_type'],
-    crossingType = json['crossing_type'],
-    side = json['side'],
-    osmWayId = json['osm_way_id'],
-    fromNodeOsmId = json['from_node_osm_id'],
-    toNodeOsmId = json['to_node_osm_id'],
-    name = json['name'],
-    markedCrossingDetour = json['marked_crossing_detour'],
-    distance = json['distance'],
-    duration = _durationFromSeconds(json['duration']),
-    accessibility = json['accessibility'],
-    path = json['path']
-      .map<Position>((item) => Position.fromGeoJsonCoordinates(item.cast<double>()))
-      .toList(growable: false),
-    elevationUp = json['elevation_up'],
-    elevationDown = json['elevation_down'],
-    inclineUp = json['incline_up'],
-    handrail = json['handrail'],
-    durationPenalty = _durationFromSeconds(json['duration_penalty']),
-    accessibilityPenalty = json['accessibility_penalty'],
-    area = json['area'],
-    level = Level.fromNumber(json['level']);
-}
-
-
-Duration _durationFromSeconds(num seconds) {
-  return Duration(
-    microseconds: (seconds * Duration.microsecondsPerSecond).round(),
-  );
 }
