@@ -14,7 +14,7 @@ class MapIndoorLayer implements MapLayerDescription {
   });
 
   @override
-  _MapIndoorLayer create(String id) => _MapIndoorLayer(id, this);
+  MapLayer<MapIndoorLayer> create(String id) => _MapIndoorLayer(id, this);
 }
 
 class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport {
@@ -23,8 +23,9 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
 
   _MapIndoorLayer(super.id, super.description);
 
+  @override
   Future<void> register() async {
-    await controller.addSource(id, VectorSourceProperties(
+    await controller.addSource(id, const VectorSourceProperties(
       url: 'https://tiles.indoorequal.org/?key=iek_3sf20d7fK0dzUhvVBcrOEg3YR6X1'
     ));
     await addJSONLayers(layers, belowLayerId: belowLayerId);
@@ -33,6 +34,7 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
     await _handleLevelChange();
   }
 
+  @override
   Future<void> update(oldDescription) async {
     if (description != oldDescription) {
       oldDescription.levelController.removeListener(_handleLevelChange);
@@ -46,6 +48,7 @@ class _MapIndoorLayer extends MapLayer<MapIndoorLayer> with MapLayerStyleSupport
     }
   }
 
+  @override
   Future<void> unregister() async {
    description.levelController.removeListener(_handleLevelChange);
     await controller.removeSource(id);

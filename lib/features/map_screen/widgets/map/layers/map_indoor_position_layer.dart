@@ -18,32 +18,35 @@ class MapIndoorPositionLayer implements MapLayerDescription {
 class _MapIndoorPositionLayer extends MapLayer<MapIndoorPositionLayer> {
   _MapIndoorPositionLayer(super.id, super.description);
 
+  @override
   Future<void> register() async {
     await controller.addGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
+  @override
   Future<void> update(oldDescription) async {
     await controller.setGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
+  @override
   Future<void> unregister() async {
     await controller.removeSource(id);
   }
 
   Map<String, dynamic> _createGeoJsonFeature() => {
-    "type": "Feature",
-    "properties": {
-      "level": description.position.level.toString(),
+    'type': 'Feature',
+    'properties': {
+      'level': description.position.level.toString(),
     },
-    "geometry": {
-      "type": "Point",
-      "coordinates": description.position.toGeoJsonCoordinates(),
+    'geometry': {
+      'type': 'Point',
+      'coordinates': description.position.toGeoJsonCoordinates(),
     }
   };
 
   Map<String, dynamic> _createGeoJsonFeatureCollection() => {
-    "type": "FeatureCollection",
-    "features": [
+    'type': 'FeatureCollection',
+    'features': [
       _createGeoJsonFeature(),
     ],
   };

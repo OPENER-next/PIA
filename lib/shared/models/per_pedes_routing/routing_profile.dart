@@ -91,6 +91,7 @@ class FeatureCostSingleEntry extends FeatureCostEntry {
     required this.cost,
   });
 
+  @override
   Map<String, dynamic> toJson() => cost.toJson();
 }
 
@@ -106,11 +107,10 @@ class FeatureCostGroupEntry extends FeatureCostEntry {
     required this.entries,
   });
 
-  Map<String, dynamic> toJson() => Map.fromIterable(
-    entries,
-    key: (element) => element.type,
-    value: (element) => element.toJson(),
-  );
+  @override
+  Map<String, dynamic> toJson() => {
+    for (final entry in entries) entry.type : entry.toJson()
+  };
 }
 
 
@@ -131,7 +131,7 @@ class FeatureCost {
   }) :
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
-    type = "allowed";
+    type = 'allowed';
 
   const FeatureCost.penalized({
     this.duration = const [],
@@ -139,14 +139,14 @@ class FeatureCost {
     this.accessibilityPenalty = 0,
     this.durationPenalty = Duration.zero,
   }) :
-    type = "penalized";
+    type = 'penalized';
 
   const FeatureCost.forbidden() :
     duration = const [],
     accessibility = const [],
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
-    type = "forbidden";
+    type = 'forbidden';
 
 
   Map<String, dynamic> toJson() => {

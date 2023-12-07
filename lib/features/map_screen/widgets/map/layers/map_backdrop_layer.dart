@@ -18,25 +18,28 @@ class MapBackdropLayer implements MapLayerDescription {
 class _MapBackdropLayer extends MapLayer<MapBackdropLayer> {
   _MapBackdropLayer(super.id, super.description);
 
+  @override
   Future<void> register() async {
     await controller.addGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
+  @override
   Future<void> update(oldDescription) async {
     await controller.setGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
+  @override
   Future<void> unregister() async {
     await controller.removeSource(id);
   }
 
   Map<String, dynamic> _createGeoJsonFeatureCollection() => {
-    "type": "FeatureCollection",
-    "features": [
+    'type': 'FeatureCollection',
+    'features': [
       {
-        "type": "Feature",
-        "geometry": {
-          "coordinates": [
+        'type': 'Feature',
+        'geometry': {
+          'coordinates': [
             [
               [
                 -180,
@@ -60,7 +63,7 @@ class _MapBackdropLayer extends MapLayer<MapBackdropLayer> {
               ],
             ],
           ],
-          "type": "Polygon"
+          'type': 'Polygon'
         },
       },
     ],

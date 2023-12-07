@@ -36,6 +36,7 @@ class MapView extends StatefulWidget {
     ),
     this.onMapClick,
     this.onMapLongClick,
+    super.key,
   });
 
   @override
@@ -49,7 +50,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewPadding = MediaQuery.of(context).padding + EdgeInsets.all(10);
+    final viewPadding = MediaQuery.of(context).padding + const EdgeInsets.all(10);
 
     return Stack(
       children: [
@@ -83,6 +84,7 @@ class _MapViewState extends State<MapView> {
     });
   }
 
+  @override
   void reassemble() async {
     super.reassemble();
     widget.mapLayerManager?.reassemble();

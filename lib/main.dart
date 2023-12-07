@@ -10,7 +10,7 @@ void main() {
   // required for system chrome
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
+    const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
@@ -23,7 +23,7 @@ void main() {
   runApp(
     MaterialApp(
       theme: ThemeData.light(),
-      home: MapScreen(),
+      home: const MapScreen(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
