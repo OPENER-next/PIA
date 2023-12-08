@@ -45,16 +45,17 @@ sealed class RoutingEdge {
     final type = json['edge_type'];
     switch (type) {
       case 'footway':
+      case 'connection':
         final streetType = json['street_type'];
         switch (streetType) {
           case 'stairs': return RoutingEdgeStairs._fromJson(json);
-          case 'escalator': return RoutingEdgeStairs._fromJson(json);
-          case 'moving_walkway': return RoutingEdgeStairs._fromJson(json);
+          case 'escalator': return RoutingEdgeEscalator._fromJson(json);
+          case 'moving_walkway': return RoutingEdgeMovingWalkway._fromJson(json);
         }
         if (
           json['incline'] != null &&
           json['incline'] != 0 &&
-          !['sidewalk', 'crossing', 'alley'].contains(json['footway'])
+          !const ['sidewalk', 'crossing', 'alley'].contains(json['footway'])
         ) return RoutingEdgeRamp._fromJson(json);
         return RoutingEdgeFootway._fromJson(json);
       case 'street': return RoutingEdgeStreet._fromJson(json);
