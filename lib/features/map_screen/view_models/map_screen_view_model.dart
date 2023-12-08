@@ -4,8 +4,8 @@ import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:mobx/mobx.dart';
-import 'package:pia/shared/services/indoor_positioning_service.dart';
 
+import '/shared/services/indoor_positioning_service.dart';
 import '/shared/utils/reactor_mixin.dart';
 import '/shared/models/position.dart';
 import '/shared/models/per_pedes_routing/ppr.dart';
@@ -54,11 +54,7 @@ class MapViewModel extends ViewModel with Reactor {
 
   final _ppr = PerPedesRoutingService();
 
-  final _indoorPositioningService = IndoorPositioningService(
-    referenceLatitude: 52.130351530779876,
-    referenceLongitude: 11.628229022026064,
-    referenceAzimuth: 0,
-  );
+  IndoorPositioningService get _indoorPositioningService => getService<IndoorPositioningService>();
 
   final levelController = IndoorLevelController(
     levels: {
@@ -66,39 +62,37 @@ class MapViewModel extends ViewModel with Reactor {
       Level.fromNumber(-1): 'UG1',
       Level.fromNumber(0): 'EG',
       Level.fromNumber(1): 'OG1',
-      Level.fromNumber(2): 'OG2',
     },
   );
 
   late final mapLayerManager = MapLayerManager({
     'indoor-vector-tiles': MapIndoorLayer(levelController: levelController),
-    'indoor-tint-layer': MapBackdropLayer(),
+    'indoor-tint-layer': const MapBackdropLayer(),
   });
 
 
-  Position? get indoorPosition => _indoorPositioningService.wgs84position; // _in.value;
+  Position? get indoorPosition => _indoorPositioningService.wgs84position;
 
   final _destinationPosition = Observable<Position?>(null);
 
   Position? get destinationPosition => _destinationPosition.value;
 
-  void set destinationPosition(Position? value) =>
+  set destinationPosition(Position? value) =>
     runInAction(() => _destinationPosition.value = value);
 
   final _route = Observable<Route?>(null);
 
   late final _routingPath = Computed(() {
     if (indoorPosition != null && _route.value != null) {
+      final route = MapRoutingPath.fromEdges(_route.value!.edges);
       // always ignore start point and replace it with the current user location
-      return [
-        indoorPosition!,
-        ..._route.value!.indoorPath.skip(1),
-      ];
+      route.first.path[0] = indoorPosition!;
+      return route;
     }
     return null;
   });
 
-  List<Position>? get routingPath => _routingPath.value;
+  MapRoutingPath? get routingPath => _routingPath.value;
 
 
   Future<void> connectToTracelet() async {
