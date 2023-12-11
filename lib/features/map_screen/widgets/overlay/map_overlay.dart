@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mvvm_architecture/base.dart';
 
+import '/features/poi_finder/widgets/poi_finder_view.dart';
 import '../../view_models/map_screen_view_model.dart';
 import 'indoor_level_bar.dart';
 
@@ -17,13 +18,13 @@ class MapOverlay extends ViewFragment<MapViewModel> {
   @override
   Widget build(BuildContext context, viewModel) {
     return Padding(
-      padding: MediaQuery.of(context).padding + EdgeInsets.all(10),
+      padding: MediaQuery.of(context).padding + const EdgeInsets.all(10),
       child: Stack(
         children: [
           AnimatedBuilder(
             animation: viewModel.mapController,
             builder: (_, child) => AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               child: viewModel.mapController.cameraPosition!.zoom >= 16 ? child : null,
             ),
             child: Align(
@@ -39,10 +40,18 @@ class MapOverlay extends ViewFragment<MapViewModel> {
             ),
           ),
           Align(
+            alignment: Alignment.topRight,
+            child: POIFinderView(
+              onSelection: (poi) {
+                viewModel.destinationPosition = poi.position;
+              },
+            ),
+          ),
+          Align(
             alignment: Alignment.bottomLeft,
             child: FloatingActionButton.small(
-              child: Icon(Icons.wifi_find_rounded),
               onPressed: viewModel.connectToTracelet,
+              child: const Icon(Icons.wifi_find_rounded),
             ),
           ),
         ],

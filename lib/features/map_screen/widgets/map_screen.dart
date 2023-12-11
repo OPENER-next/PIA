@@ -14,6 +14,7 @@ class MapScreen extends View<MapViewModel> {
   @override
   Widget build(BuildContext context, viewModel) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: MapView(
         styleUrl: 'https://api.maptiler.com/maps/bright-v2/style.json?key=3Uam2soS3S9RCPvHdP7E',
         mapLayerManager: viewModel.mapLayerManager,
