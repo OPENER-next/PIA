@@ -559,60 +559,30 @@ const _indoorAreas = [
       'fill-color': [
         'case',
         [
-          'all',
-          ['has', 'access'],
-          ['in', ['get', 'access'], ['literal', ['no', 'private']]]
+          'in',
+          ['get', 'class'],
+          ['literal', ['area', 'corridor']],
         ],
-        '#F2F1F0',
-        [
-          'any',
-          [
-            'all',
-            ['==', ['get', 'is_poi'], true],
-            ['!=', ['get', 'class'], 'corridor']
-          ],
-          [
-            'in',
-            ['get', 'subclass'],
-            [
-              'literal',
-              [
-                'class',
-                'laboratory',
-                'office',
-                'auditorium',
-                'amphitheatre',
-                'reception'
-              ]
-            ]
-          ]
-        ],
-        '#D4EDFF',
-        ['==', ['get', 'class'], 'room'],
-        '#f0e8f8',
-        '#fdfcfa'
+        '#fefbf2',
+        '#fff'
       ]
     }
   },
   {
-    'id': 'indoor-area',
+    'id': 'indoor-polygon-restricted',
     'source': 'indoor-vector-tiles',
-    'type': 'line',
+    'type': 'fill',
     'source-layer': 'area',
     'filter': [
       'all',
       _isCurrentLevelFilter,
-      [
-        'match',
-        ['get', 'class'],
-        ['area', 'corridor', 'platform'],
-        true,
-        false
-      ],
+      ['==', ['geometry-type'], 'Polygon'],
+      ['!=', ['get', 'class'], 'level'],
+      ['has', 'access'],
+      ['in', ['get', 'access'], ['literal', ['no', 'private']]]
     ],
     'paint': {
-      'line-color': '#bfbfbf',
-      'line-width': 1,
+      'fill-pattern': ['image', 'pattern_stripes'],
     }
   },
   {
@@ -637,7 +607,7 @@ const _indoorAreas = [
     'filter': [
       'all',
       _isCurrentLevelFilter,
-      ['match', ['get', 'class'], ['room', 'wall'], true, false]
+      ['in', ['get', 'class'], ['literal', ['room', 'wall', 'area', 'corridor']]]
     ],
     'paint': {
       'line-color': '#bfbfbf',
