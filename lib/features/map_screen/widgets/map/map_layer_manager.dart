@@ -149,6 +149,8 @@ mixin MapLayerStyleSupport<T extends MapLayerDescription> on MapLayer<T> {
           _createLayerPropertiesFromJson(layer),
           sourceLayer: layer['source-layer'] as String?,
           filter: layer['filter'],
+          minzoom: layer['minzoom'],
+          maxzoom: layer['maxzoom'],
           // add all non symbol layers below first symbol layer to avoid overlaps
           belowLayerId: layer['type'] != 'symbol' ? belowLayerId : null,
         ),
@@ -184,6 +186,8 @@ mixin MapLayerStyleSupport<T extends MapLayerDescription> on MapLayer<T> {
         return RasterLayerProperties.fromJson(json);
       case 'hillshade':
         return HillshadeLayerProperties.fromJson(json);
+      case 'fill-extrusion':
+        return FillExtrusionLayerProperties.fromJson(json);
       default: throw StateError('Unknown Layer type.');
     }
   }

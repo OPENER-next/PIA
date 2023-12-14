@@ -796,7 +796,7 @@ const _pois = [
     'id': 'indoor-poi-rank2',
     'source': 'indoor-vector-tiles',
     ..._commonPoi,
-    'minzoom': 19,
+    'minzoom': 19.0,
     'filter': [
       'all',
       _isCurrentLevelFilter,
