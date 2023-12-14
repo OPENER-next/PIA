@@ -39,7 +39,7 @@ const layers = [
     },
     'paint': {
       'line-color': '#555555',
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
     },
   },
   {
@@ -53,7 +53,7 @@ const layers = [
     },
     'paint': {
       'line-color': '#aaaaaa',
-      'line-width': 5,
+      'line-width': _routingPathWidth,
     },
   },
 
@@ -75,8 +75,8 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#0077c2',
-      'line-width': 7,
+      'line-color': _routingPathOutlineColor,
+      'line-width': _routingPathOutlineWidth,
     },
   },
 
@@ -91,13 +91,13 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
         ['line-progress'],
         0,
-        '#0077c2',
+        _routingPathOutlineColor,
         1,
         '#555555',
       ]
@@ -112,13 +112,13 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 5,
+      'line-width': _routingPathWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
         ['line-progress'],
         0,
-        '#42a5f5',
+        _routingPathFillColor,
         1,
         '#aaaaaa',
       ]
@@ -133,7 +133,7 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
@@ -141,7 +141,7 @@ const layers = [
         0,
         '#555555',
         1,
-        '#0077c2',
+        _routingPathOutlineColor,
       ]
     },
   },
@@ -154,7 +154,7 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 5,
+      'line-width': _routingPathWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
@@ -162,7 +162,7 @@ const layers = [
         0,
         '#aaaaaa',
         1,
-        '#42a5f5',
+        _routingPathFillColor,
       ]
     },
   },
@@ -178,7 +178,7 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
       // 'line-gradient' must be specified using an expression
       // with the special 'line-progress' property
       // the source must have the 'lineMetrics' option set to true
@@ -191,7 +191,7 @@ const layers = [
         0,
         '#555555',
         1,
-        '#0077c2',
+        _routingPathOutlineColor,
       ]
     },
   },
@@ -204,13 +204,13 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
         ['line-progress'],
         0,
-        '#0077c2',
+        _routingPathOutlineColor,
         1,
         '#555555',
       ]
@@ -249,7 +249,7 @@ const layers = [
     },
     'paint': {
       'line-color': '#555555',
-      'line-width': 7,
+      'line-width': _routingPathOutlineWidth,
     },
   },
 
@@ -265,8 +265,8 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#42a5f5',
-      'line-width': 5,
+      'line-color': _routingPathFillColor,
+      'line-width': _routingPathWidth,
     },
   },
 
@@ -282,7 +282,7 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-width': 5,
+      'line-width': _routingPathWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
@@ -290,7 +290,7 @@ const layers = [
         0,
         '#aaaaaa',
         1,
-        '#42a5f5',
+        _routingPathFillColor,
       ]
     },
   },
@@ -304,13 +304,13 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-width': 5,
+      'line-width': _routingPathWidth,
       'line-gradient': [
         'interpolate',
         ['linear'],
         ['line-progress'],
         0,
-        '#42a5f5',
+        _routingPathFillColor,
         1,
         '#aaaaaa',
       ]
@@ -330,7 +330,7 @@ const layers = [
     },
     'paint': {
       'line-color': '#aaaaaa',
-      'line-width': 5,
+      'line-width': _routingPathWidth,
     },
   },
 
@@ -346,6 +346,20 @@ const layers = [
 
   ..._routingPois,
 ];
+
+
+/***********
+** STYLES **
+************/
+
+/// Routing path line color.
+const _routingPathFillColor = '#42a5f5';
+/// Routing path line outline color.
+const _routingPathOutlineColor = '#0077c2';
+/// Routing path line color.
+const _routingPathWidth = 5;
+/// Routing path line color.
+const _routingPathOutlineWidth = _routingPathWidth + 2;
 
 
 /***********
@@ -488,7 +502,7 @@ const _indoorPosition = [
     'filter': _isCurrentLevelFilter,
     'paint': {
       'circle-radius': 8,
-      'circle-color': '#42a5f5',
+      'circle-color': _routingPathFillColor,
       'circle-stroke-width': 4,
       'circle-stroke-color': '#fff',
       'circle-pitch-alignment': 'map',
