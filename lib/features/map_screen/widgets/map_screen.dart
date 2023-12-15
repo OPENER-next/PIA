@@ -16,12 +16,11 @@ class MapScreen extends View<MapViewModel> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: MapView(
-        styleUrl: 'https://api.maptiler.com/maps/bright-v2/style.json?key=3Uam2soS3S9RCPvHdP7E',
+        styleUrl: 'https://api.maptiler.com/maps/1263a335-3d81-4ba9-9fcf-310c8d3b4534/style.json?key=3Uam2soS3S9RCPvHdP7E',
         mapLayerManager: viewModel.mapLayerManager,
         initialCameraPosition: const CameraPosition(
           target: LatLng(52.13079444242991, 11.627435088157656),
           zoom: 17,
-          tilt: 180, // will be clamped to max tilt
         ),
         onMapLongClick: (p0, position) async {
           viewModel.destinationPosition = Position(
