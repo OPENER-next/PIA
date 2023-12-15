@@ -29,8 +29,6 @@ sealed class RoutingEdge {
 
   final Level level;
 
-  LevelConnection get connectionType;
-
   RoutingEdge._fromJson(Map<String, dynamic> json) :
     name = json['name'],
     duration = _durationFromSeconds(json['duration']),
@@ -87,6 +85,7 @@ sealed class RoutingEdgePath extends RoutingEdge {
   final int elevationUp;
   final int elevationDown;
   final bool area;
+  final Incline inclineDirection;
 
   RoutingEdgePath._fromJson(super.json) :
     path = json['path']
@@ -98,6 +97,7 @@ sealed class RoutingEdgePath extends RoutingEdge {
     distance = json['distance'],
     elevationUp = json['elevation_up'],
     elevationDown = json['elevation_down'],
+    inclineDirection = json['incline_up'] ? Incline.up : Incline.down,
     area = json['area'],
     super._fromJson();
 }
@@ -110,9 +110,6 @@ class RoutingEdgeEntrance extends RoutingEdgePoint {
   final String doorType;
   final String automaticDoorType;
 
-  @override
-  LevelConnection get connectionType => LevelConnection.level;
-
   RoutingEdgeEntrance._fromJson(super.json) :
     doorType = json['door_type'] ?? 'unknown',
     automaticDoorType = json['automatic_door_type'] ?? 'unknown',
@@ -120,18 +117,10 @@ class RoutingEdgeEntrance extends RoutingEdgePoint {
 }
 
 class RoutingEdgeElevator extends RoutingEdgePoint {
-  @override
-  final LevelConnection connectionType;
-
-  RoutingEdgeElevator._fromJson(super.json) :
-    connectionType = json['incline_up'] ? LevelConnection.up : LevelConnection.down,
-    super._fromJson();
+  RoutingEdgeElevator._fromJson(super.json) : super._fromJson();
 }
 
 class RoutingEdgeCycleBarrier extends RoutingEdgePoint {
-  @override
-  LevelConnection get connectionType => LevelConnection.level;
-
   RoutingEdgeCycleBarrier._fromJson(super.json) : super._fromJson();
 }
 
@@ -145,9 +134,6 @@ class RoutingEdgeCrossing extends RoutingEdgePath {
   final bool? trafficSignalsSound;
   final bool? trafficSignalsVibration;
 
-  @override
-  LevelConnection get connectionType => LevelConnection.level;
-
   RoutingEdgeCrossing._fromJson(super.json) :
     type = json['crossing_type'],
     trafficSignalsSound = json['traffic_signals_sound'],
@@ -160,9 +146,6 @@ class RoutingEdgeStreet extends RoutingEdgePath {
   final String type;
   final int? incline;
   final String footwaySide;
-
-  @override
-  LevelConnection get connectionType => LevelConnection.level;
 
   RoutingEdgeStreet._fromJson(super.json) :
     type = json['street_type'],
@@ -178,9 +161,6 @@ class RoutingEdgeFootway extends RoutingEdgePath {
   final String type;
   final int? incline;
 
-  @override
-  LevelConnection get connectionType => LevelConnection.level;
-
   RoutingEdgeFootway._fromJson(super.json) :
     type = json['street_type'],
     incline = json['incline'],
@@ -190,20 +170,13 @@ class RoutingEdgeFootway extends RoutingEdgePath {
 class RoutingEdgeStairs extends RoutingEdgePath {
   final bool? handrail;
 
-  @override
-  final LevelConnection connectionType;
-
   RoutingEdgeStairs._fromJson(super.json) :
     handrail = json['handrail'],
-    connectionType = json['incline_up'] ? LevelConnection.up : LevelConnection.down,
     super._fromJson();
 }
 
 class RoutingEdgeRamp extends RoutingEdgePath {
   final bool? handrail;
-
-  @override
-  final LevelConnection connectionType;
 
   /// Actual incline in percent.
   /// This will be negative if traveling downwards.
@@ -212,7 +185,6 @@ class RoutingEdgeRamp extends RoutingEdgePath {
 
   RoutingEdgeRamp._fromJson(super.json) :
     handrail = json['handrail'],
-    connectionType = json['incline_up'] ? LevelConnection.up : LevelConnection.down,
     incline = json['incline'],
     super._fromJson();
 }
@@ -220,20 +192,13 @@ class RoutingEdgeRamp extends RoutingEdgePath {
 class RoutingEdgeEscalator extends RoutingEdgePath {
   final bool? handrail;
 
-  @override
-  final LevelConnection connectionType;
-
   RoutingEdgeEscalator._fromJson(super.json) :
     handrail = json['handrail'],
-    connectionType = json['incline_up'] ? LevelConnection.up : LevelConnection.down,
     super._fromJson();
 }
 
 class RoutingEdgeMovingWalkway extends RoutingEdgePath {
   final bool? handrail;
-
-  @override
-  final LevelConnection connectionType;
 
   /// Actual incline in percent.
   /// This will be negative if traveling downwards.
@@ -243,9 +208,6 @@ class RoutingEdgeMovingWalkway extends RoutingEdgePath {
   RoutingEdgeMovingWalkway._fromJson(super.json) :
     handrail = json['handrail'],
     incline = json['incline'],
-    connectionType = json['incline_up'] != null
-      ? json['incline_up'] ? LevelConnection.up : LevelConnection.down
-      : LevelConnection.level,
     super._fromJson();
 }
 
@@ -257,6 +219,6 @@ Duration _durationFromSeconds(num seconds) {
 }
 
 
-enum LevelConnection {
-  up, down, level
+enum Incline {
+  up, down
 }

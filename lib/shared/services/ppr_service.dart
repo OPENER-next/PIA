@@ -15,7 +15,7 @@ class PerPedesRoutingService extends Service with Disposable {
 
   PerPedesRoutingService({
     Uri? apiEndPoint,
-  }) : this.apiEndPoint = apiEndPoint ?? Uri.https('ppr.motis-project.de', 'api/route');
+  }) : apiEndPoint = apiEndPoint ?? Uri.https('ppr.motis-project.de', 'api/route');
 
 
   Future<List<Route>> request(RoutingRequest request) async {
