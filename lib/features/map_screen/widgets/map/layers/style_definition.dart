@@ -79,6 +79,20 @@ const layers = [
       'line-width': _routingPathOutlineWidth,
     },
   },
+  {
+    'id': 'indoor-routing-junction-outline',
+    'source': 'indoor-routing-path_metrics',
+    'type': 'circle',
+    'minzoom': 18.0,
+    'filter': ['all',
+      ['==', ['geometry-type'], 'Point'],
+      _isCurrentLevelFilter
+    ],
+    'paint': {
+      'circle-radius': 13,
+      'circle-color': _routingPathOutlineColor,
+    }
+  },
 
   // Indoor routing - Lower level connecting path segments \\
 
@@ -268,6 +282,20 @@ const layers = [
       'line-color': _routingPathFillColor,
       'line-width': _routingPathWidth,
     },
+  },
+  {
+    'id': 'indoor-routing-junction',
+    'source': 'indoor-routing-path_metrics',
+    'type': 'circle',
+    'minzoom': 18.0,
+    'filter': ['all',
+      ['==', ['geometry-type'], 'Point'],
+      _isCurrentLevelFilter
+    ],
+    'paint': {
+      'circle-radius': 12,
+      'circle-color': _routingPathFillColor,
+    }
   },
 
   // Indoor routing - Fill - Upper level connecting path segments \\
@@ -515,27 +543,42 @@ const _indoorPosition = [
 
 const _routingPois = [
   {
-    'id': 'routing-poi-entrance',
+    'id': 'indoor-routing-pois',
     'source': 'indoor-routing-path_metrics',
     'type': 'symbol',
+    'minzoom': 18.0,
     'filter': ['all',
-      ['==', ['get', 'type'], 'entrance'],
+      _isCurrentLevelFilter,
+      ['in', ['get', 'type'], ['literal', [
+        'entrance',
+        'cycle_barrier',
+      ]]],
     ],
     'layout': {
-      'icon-image': 'door',
-      'icon-rotation-alignment': 'viewport',
+      'icon-size': 0.5,
+      'icon-image': ['match', ['get', 'type'],
+        'entrance', 'door',
+        'cycle_barrier', 'cycle_barrier',
+        null
+      ],
     },
   },
   {
-    'id': 'routing-poi-elevator',
+    'id': 'indoor-routing-poi-elevator',
     'source': 'indoor-routing-path_metrics',
     'type': 'symbol',
+    'minzoom': 18.0,
     'filter': ['all',
+      _isCurrentLevelFilter,
       ['==', ['get', 'type'], 'elevator'],
     ],
     'layout': {
-      'icon-image': 'elevator',
-      'icon-rotation-alignment': 'viewport',
+      'icon-size': 0.5,
+      'icon-image': ['match', ['get', 'connection'],
+        'up', 'elevator_up',
+        'down', 'elevator_down',
+        null
+      ],
     },
   },
 ];
@@ -852,4 +895,3 @@ const _commonPoi = {
 };
 
 const _rank2Class = ['waste_basket', 'information', 'vending_machine', 'bench', 'photo_booth', 'ticket_validator'];
-
