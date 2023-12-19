@@ -40,19 +40,24 @@ class MapOverlay extends ViewFragment<MapViewModel> {
             ),
           ),
           Align(
-            alignment: Alignment.topRight,
-            child: POIFinderView(
-              onSelection: (poi) {
-                viewModel.destinationPosition = poi.position;
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: FloatingActionButton.small(
-              onPressed: viewModel.connectToTracelet,
-              child: const Icon(Icons.wifi_find_rounded),
-            ),
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton.small(
+                  onPressed: viewModel.connectToTracelet,
+                  child: const Icon(Icons.wifi_find_rounded),
+                ),
+                FloatingActionButton.small(
+                  onPressed: viewModel.connectToTracelet,
+                  child: POIFinderView(
+                    onSelection: (poi) {
+                      viewModel.destinationPosition = poi.position;
+                    },
+                  ),
+                ),
+              ],
+            )
           ),
         ],
       ),
