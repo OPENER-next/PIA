@@ -38,7 +38,7 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#555555',
+      'line-color': _routingPathOtherLevelOutlineColor,
       'line-width': _routingPathOutlineWidth,
     },
   },
@@ -52,7 +52,7 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#aaaaaa',
+      'line-color': _routingPathOtherLevelFillColor,
       'line-width': _routingPathWidth,
     },
   },
@@ -113,7 +113,7 @@ const layers = [
         0,
         _routingPathOutlineColor,
         1,
-        '#555555',
+        _routingPathOtherLevelOutlineColor,
       ]
     },
   },
@@ -134,7 +134,7 @@ const layers = [
         0,
         _routingPathFillColor,
         1,
-        '#aaaaaa',
+        _routingPathOtherLevelFillColor,
       ]
     },
   },
@@ -153,7 +153,7 @@ const layers = [
         ['linear'],
         ['line-progress'],
         0,
-        '#555555',
+        _routingPathOtherLevelOutlineColor,
         1,
         _routingPathOutlineColor,
       ]
@@ -174,7 +174,7 @@ const layers = [
         ['linear'],
         ['line-progress'],
         0,
-        '#aaaaaa',
+        _routingPathOtherLevelFillColor,
         1,
         _routingPathFillColor,
       ]
@@ -203,7 +203,7 @@ const layers = [
         ['linear'],
         ['line-progress'],
         0,
-        '#555555',
+        _routingPathOtherLevelOutlineColor,
         1,
         _routingPathOutlineColor,
       ]
@@ -226,7 +226,7 @@ const layers = [
         0,
         _routingPathOutlineColor,
         1,
-        '#555555',
+        _routingPathOtherLevelOutlineColor,
       ]
     },
   },
@@ -243,7 +243,7 @@ const layers = [
       'line-join': 'round',
     },
     'paint': {
-      'line-color': '#555555',
+      'line-color': _routingPathOtherLevelOutlineColor,
       'line-width': 1,
       'line-gap-width': 5,
       'line-dasharray': ['literal', [4, 4]],
@@ -262,7 +262,7 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#555555',
+      'line-color': _routingPathOtherLevelOutlineColor,
       'line-width': _routingPathOutlineWidth,
     },
   },
@@ -316,7 +316,7 @@ const layers = [
         ['linear'],
         ['line-progress'],
         0,
-        '#aaaaaa',
+        _routingPathOtherLevelFillColor,
         1,
         _routingPathFillColor,
       ]
@@ -340,7 +340,7 @@ const layers = [
         0,
         _routingPathFillColor,
         1,
-        '#aaaaaa',
+        _routingPathOtherLevelFillColor,
       ]
     },
   },
@@ -357,10 +357,12 @@ const layers = [
       'line-cap': 'round',
     },
     'paint': {
-      'line-color': '#aaaaaa',
+      'line-color': _routingPathOtherLevelFillColor,
       'line-width': _routingPathWidth,
     },
   },
+
+  ..._routingDestination,
 
   // Indoor location indicator \\
 
@@ -380,10 +382,14 @@ const layers = [
 ** STYLES **
 ************/
 
-/// Routing path line color.
+/// Routing path current level line color.
 const _routingPathFillColor = '#42a5f5';
-/// Routing path line outline color.
+/// Routing path current level line outline color.
 const _routingPathOutlineColor = '#0077c2';
+/// Routing path other level line color.
+const _routingPathOtherLevelFillColor = '#aaaaaa';
+/// Routing path other level line outline color.
+const _routingPathOtherLevelOutlineColor = '#555555';
 /// Routing path line color.
 const _routingPathWidth = 5;
 /// Routing path line color.
