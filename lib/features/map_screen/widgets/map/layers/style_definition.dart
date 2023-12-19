@@ -842,28 +842,6 @@ const _undergroundIndoorAreas = [
       'fill-color': '#dddddd',
     },
   },
-  {
-    'id': 'indoor-area-other',
-    'source': 'indoor-vector-tiles',
-    'type': 'line',
-    'source-layer': 'area',
-    'filter': [
-      'all',
-      _isLowerLevelFilter,
-      // indoor level matching - end \\
-      [
-        'match',
-        ['get', 'class'],
-        ['area', 'corridor', 'platform'],
-        true,
-        false
-      ]
-    ],
-    'paint': {
-      'line-color': '#bfbfbf',
-      'line-width': 1,
-    },
-  }
 ];
 
 /// All points of interest of the current level.
