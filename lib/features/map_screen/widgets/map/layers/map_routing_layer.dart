@@ -93,52 +93,80 @@ class MapRoutingPath extends ListBase<MapRoutingEdge> {
 
   static Iterable<MapRoutingEdge> _edgesToSegments(Iterable<RoutingEdge> edges) sync* {
     final iter = edges.iterator;
+    final merger = EdgeMerger();
+
     // exit on empty path
     if (!iter.moveNext()) return;
-
     var previousEdge = iter.current;
-    var positionBuffer = <LatLng>[];
+    merger.add(previousEdge);
 
-    do {
-      final edge = iter.current;
+    // return single geo json feature
+    if (!iter.moveNext()) {
+      final mergeData = merger.current;
+      yield MapRoutingEdge(
+        path: mergeData.path,
+        fromLevel: mergeData.edge.level,
+        toLevel: mergeData.edge.level,
+        type: _typeToName(mergeData.edge),
+      );
+      return;
+    }
 
-      if (previousEdge.runtimeType != edge.runtimeType || previousEdge.level != edge.level) {
+    var currentEdge = iter.current;
+    {
+      final mergeData = merger.add(currentEdge);
+      if (mergeData != null) {
         yield MapRoutingEdge(
-          path: positionBuffer,
-          level: previousEdge.level,
+          path: mergeData.path,
+          fromLevel: previousEdge.level,
+          toLevel: currentEdge.level,
           type: _typeToName(previousEdge),
-          connection: previousEdge.connectionType,
         );
-        // new list for next geo json feature
-        positionBuffer = [];
+      }
+    }
+
+    while (iter.moveNext()) {
+      final nextEdge = iter.current;
+      final mergeData = merger.add(nextEdge);
+
+      if (mergeData != null) {
+        final Level from;
+        final Level to;
+        switch (currentEdge) {
+          case RoutingEdgeElevator():
+          case RoutingEdgeStairs():
+          case RoutingEdgeRamp():
+          case RoutingEdgeEscalator():
+          case RoutingEdgeMovingWalkway():
+            from = previousEdge.level;
+            to = nextEdge.level;
+          break;
+          default:
+            from = currentEdge.level;
+            to = currentEdge.level;
+        }
+
+        yield MapRoutingEdge(
+          path: mergeData.path,
+          fromLevel: from,
+          toLevel: to,
+          type: _typeToName(currentEdge),
+        );
       }
 
-      if (positionBuffer.isEmpty) {
-        if (edge is RoutingEdgePoint) {
-          positionBuffer.add(edge.point);
-        }
-        else if (edge is RoutingEdgePath) {
-          positionBuffer.addAll(edge.path);
-        }
-      }
-      else {
-        // if the edges are merged into one path/segment
-        // ignore RoutingEdgePoints
-        if (edge is RoutingEdgePath) {
-          // and skip first position since it is identical to the last position of the previous edge
-          positionBuffer.addAll(edge.path.skip(1));
-        }
-      }
-      previousEdge = edge;
-    } while (iter.moveNext());
-
+      previousEdge = currentEdge;
+      currentEdge = nextEdge;
+    }
     // return final geo json feature
-    yield MapRoutingEdge(
-      path: positionBuffer,
-      level: previousEdge.level,
-      type: _typeToName(previousEdge),
-      connection: previousEdge.connectionType,
-    );
+    {
+      final mergeData = merger.current;
+      yield MapRoutingEdge(
+        path: mergeData.path,
+        fromLevel: currentEdge.level,
+        toLevel: currentEdge.level,
+        type: _typeToName(currentEdge),
+      );
+    }
   }
 
   static _typeToName (RoutingEdge edge) {
@@ -183,26 +211,23 @@ class MapRoutingPath extends ListBase<MapRoutingEdge> {
 
 class MapRoutingEdge {
   final List<LatLng> path;
-  final Level level;
+  final Level fromLevel;
+  final Level toLevel;
   final String type;
-
-  /// For stairs, escalators and the like this indicates an incline/decline in the path direction.
-  /// For elevators this simply tells if they should travel up or down.
-  final LevelConnection connection;
 
   MapRoutingEdge({
     required this.path,
-    required this.level,
+    required this.fromLevel,
+    required this.toLevel,
     required this.type,
-    required this.connection,
   });
 
   Map<String, dynamic> toGeoJsonFeature() => {
     'type': 'Feature',
     'properties': {
       'type': type,
-      'level': level.toString(),
-      'connection': connection.name,
+      'from_level': fromLevel.asNumber,
+      'to_level': toLevel.asNumber,
     },
     if (path.length == 1) 'geometry': {
       'type': 'Point',
@@ -215,4 +240,67 @@ class MapRoutingEdge {
         .toList(growable: false),
     }
   };
+}
+
+
+/// Helper class to merge similar edges into one.
+
+class EdgeMerger {
+
+  /// Callback that returns `true` when the previous edge should be merged into the current edge.
+
+  final bool Function(RoutingEdge previousEdge, RoutingEdge edge) shouldMerge;
+
+  List<LatLng> _positionBuffer = [];
+  RoutingEdge? _previousEdge;
+
+  /// Default merge heuristics are based on the edge type and level.
+
+  EdgeMerger({
+    this.shouldMerge = _defaultMergeHeuristics,
+  });
+
+  static bool _defaultMergeHeuristics(RoutingEdge previousEdge, RoutingEdge edge) =>
+    previousEdge.runtimeType == edge.runtimeType && previousEdge.level == edge.level;
+
+  /// Returns the last edge with the merged path whenever a new edge starts.
+  /// This happens when [shouldMerge] returns `false`.
+  ///
+  /// If the given edge is merged with the previous one `null` is returned.
+
+  ({RoutingEdge edge, List<LatLng> path})? add(RoutingEdge edge) {
+    ({RoutingEdge edge, List<LatLng> path})? mergedEdge;
+    if (_previousEdge != null && !shouldMerge(_previousEdge!, edge)) {
+      mergedEdge = (edge: _previousEdge!, path: _positionBuffer);
+      // new list for next geo json feature
+      _positionBuffer = [];
+    }
+    if (_positionBuffer.isEmpty) {
+      if (edge is RoutingEdgePoint) {
+        _positionBuffer.add(edge.point);
+      }
+      else if (edge is RoutingEdgePath) {
+        _positionBuffer.addAll(edge.path);
+      }
+    }
+    else {
+      // if the edges are merged into one path/segment
+      // ignore RoutingEdgePoints
+      if (edge is RoutingEdgePath) {
+        // and skip first position since it is identical to the last position of the previous edge
+        _positionBuffer.addAll(edge.path.skip(1));
+      }
+    }
+    _previousEdge = edge;
+    return mergedEdge;
+  }
+
+  /// Returns the current edge data.
+
+  ({RoutingEdge edge, List<LatLng> path}) get current {
+    if (_previousEdge == null) {
+      throw StateError('current must not be read before add() has been called.');
+    }
+    return (edge: _previousEdge!, path: _positionBuffer);
+  }
 }

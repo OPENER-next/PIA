@@ -32,7 +32,7 @@ const layers = [
     'id': 'indoor-routing-path-below-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionFilter,
+    'filter': _isLowerLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -46,7 +46,7 @@ const layers = [
     'id': 'indoor-routing-path-below',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionFilter,
+    'filter': _isLowerLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -69,7 +69,7 @@ const layers = [
     'id': 'indoor-routing-path-current-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isCurrentLevelConnectionFilter,
+    'filter': _isCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -86,7 +86,7 @@ const layers = [
     'minzoom': 18.0,
     'filter': ['all',
       ['==', ['geometry-type'], 'Point'],
-      _isCurrentLevelFilter
+      _connectsToCurrentLevelRoutingFilter
     ],
     'paint': {
       'circle-radius': 13,
@@ -100,7 +100,7 @@ const layers = [
     'id': 'indoor-routing-lower-path-down-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionDownFilter,
+    'filter': _leadsToLowerLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -121,7 +121,7 @@ const layers = [
     'id': 'indoor-routing-lower-path-down',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionDownFilter,
+    'filter': _leadsToLowerLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -142,7 +142,7 @@ const layers = [
     'id': 'indoor-routing-lower-path-up-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionUpFilter,
+    'filter': _leadsUpToCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -163,7 +163,7 @@ const layers = [
     'id': 'indoor-routing-lower-path-up',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionUpFilter,
+    'filter': _leadsUpToCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -187,7 +187,7 @@ const layers = [
     'id': 'indoor-routing-upper-path-down-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionDownFilter,
+    'filter': _leadsDownToCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -213,7 +213,7 @@ const layers = [
     'id': 'indoor-routing-upper-path-up-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionUpFilter,
+    'filter': _leadsToUpperLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -238,7 +238,7 @@ const layers = [
     // required, otherwise line-dasharray will scale with metrics
     'source': 'indoor-routing-path_nometrics',
     'type': 'line',
-    'filter': _isLowerLevelConnectionFilter,
+    'filter': _isLowerLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
     },
@@ -256,7 +256,7 @@ const layers = [
     'id': 'indoor-routing-path-above-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionFilter,
+    'filter': _isUpperLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -273,7 +273,7 @@ const layers = [
     'id': 'indoor-routing-path-current',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isCurrentLevelConnectionFilter,
+    'filter': _isCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -290,7 +290,7 @@ const layers = [
     'minzoom': 18.0,
     'filter': ['all',
       ['==', ['geometry-type'], 'Point'],
-      _isCurrentLevelFilter
+      _connectsToCurrentLevelRoutingFilter
     ],
     'paint': {
       'circle-radius': 12,
@@ -304,7 +304,7 @@ const layers = [
     'id': 'indoor-routing-upper-path-down',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionDownFilter,
+    'filter': _leadsDownToCurrentLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -326,7 +326,7 @@ const layers = [
     'id': 'indoor-routing-upper-path-up',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionUpFilter,
+    'filter': _leadsToUpperLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -351,7 +351,7 @@ const layers = [
     'id': 'indoor-routing-path-above',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelConnectionFilter,
+    'filter': _isUpperLevelRoutingFilter,
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -394,6 +394,155 @@ const _routingPathOutlineWidth = _routingPathWidth + 2;
 ** FILTER **
 ************/
 
+// routing layer \\
+
+const _currentLevel = ['var', 'level'];
+
+const _ceilFromLevel = ['ceil', ['to-number', ['get', 'from_level']]];
+const _ceilToLevel = ['ceil', ['to-number', ['get', 'to_level']]];
+const _floorFromLevel = ['floor', ['to-number', ['get', 'from_level']]];
+const _floorToLevel = ['floor', ['to-number', ['get', 'to_level']]];
+
+/// Filter to match all connections that lie on, cross or connect to the current level.
+
+const _connectsToCurrentLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'all',
+    ['<=', ['min', _floorToLevel, _floorFromLevel], _currentLevel],
+    ['>=', ['max', _ceilToLevel, _ceilFromLevel], _currentLevel],
+  ],
+];
+
+/// Filter to match path connections on the current level.
+
+const _isCurrentLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'any',
+    [
+      'all',
+      ['==', _ceilFromLevel, _currentLevel],
+      ['==', _ceilToLevel, _currentLevel],
+    ],
+    [
+      'all',
+      ['==', _floorFromLevel, _currentLevel],
+      ['==', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match path connections on any lower level that do not connect to current level.
+
+const _isLowerLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'any',
+    [
+      'all',
+      ['<', _ceilFromLevel, _currentLevel],
+      ['<', _ceilToLevel, _currentLevel],
+    ],
+    [
+      'all',
+      ['<', _floorFromLevel, _currentLevel],
+      ['<', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match path connections on any upper level that do not connect to current level.
+
+const _isUpperLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'any',
+    [
+      'all',
+      ['>', _ceilFromLevel, _currentLevel],
+      ['>', _ceilToLevel, _currentLevel],
+    ],
+    [
+      'all',
+      ['>', _floorFromLevel, _currentLevel],
+      ['>', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match paths that act as a connection from the current level to the upper level.
+
+const _leadsToUpperLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'all',
+    [
+      'any',
+      ['==', _ceilFromLevel, _currentLevel],
+      ['==', _floorFromLevel, _currentLevel],
+    ],
+    [
+      'any',
+      ['>', _ceilToLevel, _currentLevel],
+      ['>', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match paths that act as a connection from the upper level to the current level.
+
+const _leadsDownToCurrentLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'all',
+    [
+      'any',
+      ['>', _ceilFromLevel, _currentLevel],
+      ['>', _floorFromLevel, _currentLevel],
+    ],
+    [
+      'any',
+      ['==', _ceilToLevel, _currentLevel],
+      ['==', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match paths that act as a connection from the current level to the lower level.
+
+const _leadsToLowerLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'all',
+    [
+      'any',
+      ['==', _ceilFromLevel, _currentLevel],
+      ['==', _floorFromLevel, _currentLevel],
+    ],
+    [
+      'any',
+      ['<', _ceilToLevel, _currentLevel],
+      ['<', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+/// Filter to match paths that act as a connection from the lower level to the current level.
+
+const _leadsUpToCurrentLevelRoutingFilter = [
+  'let', 'level', 0, [
+    'all',
+    [
+      'any',
+      ['<', _ceilFromLevel, _currentLevel],
+      ['<', _floorFromLevel, _currentLevel],
+    ],
+    [
+      'any',
+      ['==', _ceilToLevel, _currentLevel],
+      ['==', _floorToLevel, _currentLevel],
+    ],
+  ],
+];
+
+// indoor tile layer \\
+
+const _ceilLevel = ['ceil', ['to-number', ['get', 'level']]];
+const _floorLevel = ['floor', ['to-number', ['get', 'level']]];
 
 /// Filter to only show element if level matches current level.
 ///
@@ -402,8 +551,8 @@ const _routingPathOutlineWidth = _routingPathWidth + 2;
 const _isCurrentLevelFilter = [
   'let', 'level', 0, [
     'any',
-    ['==', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
-    ['==', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
+    ['==', _ceilLevel, _currentLevel],
+    ['==', _floorLevel, _currentLevel],
   ],
 ];
 
@@ -413,92 +562,8 @@ const _isLowerLevelFilter = [
   'let', 'level', 0, [
     // important that ceil and floor need to be lower
     'all',
-    ['<', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
-    ['<', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
-  ],
-];
-
-/// Filter to match **any** level above the current level.
-
-const _isUpperLevelFilter = [
-  'let', 'level', 0, [
-    'all',
-    ['>', ['ceil', ['to-number', ['get', 'level']]], ['var', 'level']],
-    ['>', ['floor', ['to-number', ['get', 'level']]], ['var', 'level']],
-  ],
-];
-
-/// Filter to match path connections on the current level.
-
-const _isCurrentLevelConnectionFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  ['==', ['get', 'connection'], 'level'],
-  _isCurrentLevelFilter,
-];
-
-/// Filter to match path connections on any lower level that do not connect to current level.
-
-const _isLowerLevelConnectionFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  _isLowerLevelFilter,
-  ['!', _isLowerLevelConnectionUpFilter],
-  ['!', _isLowerLevelConnectionDownFilter],
-];
-
-/// Filter to match path connections on any upper level that do not connect to current level.
-
-const _isUpperLevelConnectionFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  _isUpperLevelFilter,
-  ['!', _isUpperLevelConnectionUpFilter],
-  ['!', _isUpperLevelConnectionDownFilter],
-];
-
-/// Filter to match paths that act as a connection from the current level to the upper
-/// level in upwards directions.
-
-const _isUpperLevelConnectionUpFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  ['==', ['get', 'connection'], 'up'],
-  // level connecting ways only have their lower level
-  _isCurrentLevelFilter,
-];
-
-/// Filter to match paths that act as a connection from the current level to the upper
-/// level in downwards directions.
-
-const _isUpperLevelConnectionDownFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  ['==', ['get', 'connection'], 'down'],
-  // level connecting ways only have their lower level
-  _isCurrentLevelFilter,
-];
-
-/// Filter to match paths that act as a connection from the current level to the lower
-/// level in upwards directions.
-
-const _isLowerLevelConnectionUpFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  ['==', ['get', 'connection'], 'up'],
-  [
-    'let', 'level', 0, [
-      // level connecting ways only have their lower level
-      '==', ['floor', ['to-number', ['get', 'level']]], ['-', ['var', 'level'], 1],
-    ]
-  ],
-];
-
-/// Filter to match paths that act as a connection from the current level to the lower
-/// level in downwards directions.
-
-const _isLowerLevelConnectionDownFilter = ['all',
-  ['==', ['geometry-type'], 'LineString'],
-  ['==', ['get', 'connection'], 'down'],
-  [
-    'let', 'level', 0, [
-      // level connecting ways only have their lower level
-      '==', ['floor', ['to-number', ['get', 'level']]], ['-', ['var', 'level'], 1],
-    ]
+    ['<', _ceilLevel, _currentLevel],
+    ['<', _floorLevel, _currentLevel],
   ],
 ];
 
@@ -548,7 +613,7 @@ const _routingPois = [
     'type': 'symbol',
     'minzoom': 18.0,
     'filter': ['all',
-      _isCurrentLevelFilter,
+      _connectsToCurrentLevelRoutingFilter,
       ['in', ['get', 'type'], ['literal', [
         'entrance',
         'cycle_barrier',
@@ -569,15 +634,15 @@ const _routingPois = [
     'type': 'symbol',
     'minzoom': 18.0,
     'filter': ['all',
-      _isCurrentLevelFilter,
+      _connectsToCurrentLevelRoutingFilter,
       ['==', ['get', 'type'], 'elevator'],
     ],
     'layout': {
       'icon-size': 0.5,
-      'icon-image': ['match', ['get', 'connection'],
-        'up', 'elevator_up',
-        'down', 'elevator_down',
-        null
+      'icon-image': ['case',
+        ['>', ['get', 'from_level'], ['get', 'to_level']],
+        'elevator_down',
+        'elevator_up',
       ],
     },
   },
