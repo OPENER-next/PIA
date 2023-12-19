@@ -13,7 +13,7 @@ import '/shared/models/level.dart';
 import '/shared/services/ppr_service.dart';
 import '/shared/utils/indoor_level_controller.dart';
 import '../widgets/map/layers/map_indoor_layer.dart';
-import '../widgets/map/layers/map_indoor_position_layer.dart';
+import '../widgets/map/layers/map_position_layer.dart';
 import '../widgets/map/layers/map_routing_layer.dart';
 import '../widgets/map/layers/map_backdrop_layer.dart';
 import '../widgets/map/map_layer_manager.dart';
@@ -24,7 +24,8 @@ class MapViewModel extends ViewModel with Reactor {
 
     react(
       (_) => indoorPosition,
-      (_) => _updateMapLayers(),
+      (_) => _updateIndoorPositionLayer(),
+      fireImmediately: true,
     );
 
     react(
@@ -39,12 +40,15 @@ class MapViewModel extends ViewModel with Reactor {
 
     react(
       (_) => destinationPosition,
-      (_) => _recalculateRouting(),
+      (_) {
+        _recalculateRouting();
+        _updateDestinationLayer();
+      }
     );
 
     react(
       (_) => routingPath,
-      (_) => _updateMapLayers(),
+      (_) => _updateRoutingLayer(),
     );
   }
 
@@ -113,15 +117,7 @@ class MapViewModel extends ViewModel with Reactor {
   }
 
 
-  void _updateMapLayers() {
-    if (indoorPosition != null) {
-      mapLayerManager.set('indoor-position', MapIndoorPositionLayer(
-        position: indoorPosition!,
-      ));
-    }
-    else {
-      mapLayerManager.remove('indoor-position');
-    }
+  void _updateRoutingLayer() {
     if (routingPath != null) {
       mapLayerManager.set('indoor-routing-path', MapRoutingLayer(
         path: routingPath!,
@@ -132,6 +128,27 @@ class MapViewModel extends ViewModel with Reactor {
     }
   }
 
+  void _updateIndoorPositionLayer() {
+    if (indoorPosition != null) {
+      mapLayerManager.set('indoor-position', MapPositionLayer(
+        position: indoorPosition!,
+      ));
+    }
+    else {
+      mapLayerManager.remove('indoor-position');
+    }
+  }
+
+  void _updateDestinationLayer() {
+    if (destinationPosition != null) {
+      mapLayerManager.set('indoor-routing-destination', MapPositionLayer(
+        position: destinationPosition!,
+      ));
+    }
+    else {
+      mapLayerManager.remove('indoor-routing-destination');
+    }
+  }
 
   @override
   void dispose() {

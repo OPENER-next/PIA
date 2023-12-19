@@ -620,7 +620,7 @@ const _routingPois = [
       ]]],
     ],
     'layout': {
-      'icon-size': 0.5,
+      'icon-size': 0.75,
       'icon-image': ['match', ['get', 'type'],
         'entrance', 'door',
         'cycle_barrier', 'cycle_barrier',
@@ -638,12 +638,38 @@ const _routingPois = [
       ['==', ['get', 'type'], 'elevator'],
     ],
     'layout': {
-      'icon-size': 0.5,
+      'icon-size': 0.75,
       'icon-image': ['case',
         ['>', ['get', 'from_level'], ['get', 'to_level']],
         'elevator_down',
         'elevator_up',
       ],
+    },
+  },
+];
+
+
+/// Routing destination indicator
+
+const _routingDestination = [
+  {
+    'id': 'indoor-routing-destination-circle',
+    'source': 'indoor-routing-destination',
+    'type': 'circle',
+    'paint': {
+      'circle-radius': 14,
+      'circle-color': '#e6475b',
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#a21629'
+    }
+  },
+  {
+    'id': 'indoor-routing-destination-icon',
+    'source': 'indoor-routing-destination',
+    'type': 'symbol',
+    'layout': {
+      'icon-size': 0.75,
+      'icon-image': 'destination',
     },
   },
 ];

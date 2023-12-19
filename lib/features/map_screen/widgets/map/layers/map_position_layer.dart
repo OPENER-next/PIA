@@ -4,19 +4,19 @@ import '/shared/models/position.dart';
 import '../map_layer_manager.dart';
 
 
-class MapIndoorPositionLayer implements MapLayerDescription {
+class MapPositionLayer implements MapLayerDescription {
   final Position position;
 
-  const MapIndoorPositionLayer({
+  const MapPositionLayer({
     required this.position,
   });
 
   @override
-  MapLayer<MapLayerDescription> create(String id) => _MapIndoorPositionLayer(id, this);
+  MapLayer<MapLayerDescription> create(String id) => _MapPositionLayer(id, this);
 }
 
-class _MapIndoorPositionLayer extends MapLayer<MapIndoorPositionLayer> {
-  _MapIndoorPositionLayer(super.id, super.description);
+class _MapPositionLayer extends MapLayer<MapPositionLayer> {
+  _MapPositionLayer(super.id, super.description);
 
   @override
   Future<void> register() async {
@@ -36,7 +36,7 @@ class _MapIndoorPositionLayer extends MapLayer<MapIndoorPositionLayer> {
   Map<String, dynamic> _createGeoJsonFeature() => {
     'type': 'Feature',
     'properties': {
-      'level': description.position.level.toString(),
+      'level': description.position.level.asNumber,
     },
     'geometry': {
       'type': 'Point',
