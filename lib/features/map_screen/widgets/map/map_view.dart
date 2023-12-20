@@ -64,6 +64,7 @@ class _MapViewState extends State<MapView> {
           styleString: widget.styleUrl,
           attributionButtonPosition: AttributionButtonPosition.BottomLeft,
           attributionButtonMargins: Point(viewPadding.left, viewPadding.bottom),
+          compassViewMargins: Point(viewPadding.right, viewPadding.top),
         ),
         if (widget.overlayBuilder != null && _styleLoaded)
           widget.overlayBuilder!(context, _mapController!),

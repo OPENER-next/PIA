@@ -34,6 +34,8 @@ class _IndoorLevelBarState<T> extends State<IndoorLevelBar<T>> with SingleTicker
           ),
           clipBehavior: Clip.antiAlias,
           child: FlexWithHighlightedChild(
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.ease,
             vsync: this,
             active: widget.active != null
               ? widget.levels.keys.toList().reversed.toList().indexOf(widget.active!)
@@ -44,16 +46,17 @@ class _IndoorLevelBarState<T> extends State<IndoorLevelBar<T>> with SingleTicker
               builder: (innerContext) => InkWell(
                 onTap: () => widget.onSelect?.call(entry.key),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     vertical: 12,
                     horizontal: 8,
                   ),
                   child: AnimatedDefaultTextStyle(
                     textAlign: TextAlign.center,
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeInOutCubicEmphasized,
                     style: entry.key == widget.active
                       ? TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       )
                       : TextStyle(
