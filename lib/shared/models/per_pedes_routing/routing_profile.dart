@@ -117,7 +117,7 @@ class FeatureCostGroupEntry extends FeatureCostEntry {
 /// Per Pedes cost definition.
 
 class FeatureCost {
-  final String type;
+  final FeatureCostQualifier qualifier;
 
   final List<Duration> duration;
   final List<int> accessibility;
@@ -131,7 +131,7 @@ class FeatureCost {
   }) :
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
-    type = 'allowed';
+    qualifier = FeatureCostQualifier.allowed;
 
   const FeatureCost.penalized({
     this.duration = const [],
@@ -139,14 +139,14 @@ class FeatureCost {
     this.accessibilityPenalty = 0,
     this.durationPenalty = Duration.zero,
   }) :
-    type = 'penalized';
+    qualifier = FeatureCostQualifier.penalized;
 
   const FeatureCost.forbidden() :
     duration = const [],
     accessibility = const [],
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
-    type = 'forbidden';
+    qualifier = FeatureCostQualifier.forbidden;
 
 
   Map<String, dynamic> toJson() => {
@@ -156,6 +156,26 @@ class FeatureCost {
     'duration_penalty': durationPenalty.inSeconds,
     'accessibility': accessibility,
     'accessibility_penalty': accessibilityPenalty,
-    'allowed': type,
+    'allowed': qualifier.name,
   };
+}
+
+
+enum FeatureCostQualifier {
+  forbidden, penalized, allowed;
+
+  const FeatureCostQualifier();
+
+  factory FeatureCostQualifier.fromString(String value) {
+    switch(value) {
+      case 'forbidden':
+      return FeatureCostQualifier.forbidden;
+      case 'penalized':
+      return FeatureCostQualifier.penalized;
+      case 'allowed':
+      return FeatureCostQualifier.allowed;
+      default:
+      throw StateError('Unsopported qualifier $value for FeatureCostQualifier');
+    }
+  }
 }
