@@ -23,7 +23,7 @@ class RoutingProfile {
   final Duration divisionsDuration;
   final int divisionsAccessibility;
 
-  final Set<FeatureCostEntry> featureCosts;
+  final Map<String, FeatureCostBase> featureCosts;
 
   const RoutingProfile({
     this.walkingSpeed = 1.4,
@@ -66,104 +66,55 @@ class RoutingProfile {
     'max_routes': maxRoutes,
     'divisions_duration': divisionsDuration.inSeconds,
     'divisions_accessibility': divisionsAccessibility,
-    for (final entry in featureCosts) entry.type: entry.toJson(),
-  };
-}
-
-/// Maps a specific feature to a cost definition.
-///
-/// Equality is only based on the name to filter duplicates via a Set.
-
-abstract class FeatureCostEntry {
-  final String type;
-
-  const FeatureCostEntry({
-    required this.type,
-  });
-
-  Map<String, dynamic> toJson();
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is FeatureCostEntry &&
-      other.type == type;
-  }
-
-  @override
-  int get hashCode => type.hashCode;
-}
-
-/// Maps a specific feature to a cost definition.
-///
-/// Symbolizes a json entry like `stairs_with_handrail_down_cost	{…}`.
-
-class FeatureCostSingleEntry extends FeatureCostEntry {
-  final FeatureCost cost;
-
-  const FeatureCostSingleEntry({
-    required super.type,
-    required this.cost,
-  });
-
-  @override
-  Map<String, dynamic> toJson() => cost.toJson();
-}
-
-/// Maps specific feature variants to multiple cost definitions.
-///
-/// Symbolizes a json entry like `crossing_tertiary	{…}`.
-
-class FeatureCostGroupEntry extends FeatureCostEntry {
-  final Set<FeatureCostSingleEntry> entries;
-
-  const FeatureCostGroupEntry({
-    required super.type,
-    required this.entries,
-  });
-
-  @override
-  Map<String, dynamic> toJson() => {
-    for (final entry in entries) entry.type : entry.toJson()
+    for (final entry in featureCosts.entries) entry.key: entry.value.toJson(),
   };
 }
 
 
 /// Per Pedes cost definition.
 
-class FeatureCost {
+abstract class FeatureCostBase {
+  Map<String, dynamic> toJson();
+}
+
+/// A specific feature cost definition.
+///
+/// Symbolizes a json entry like `stairs_with_handrail_down_cost	{…}`.
+
+class FeatureCost implements FeatureCostBase {
   final FeatureCostQualifier qualifier;
 
   final List<Duration> duration;
-  final List<int> accessibility;
+  final List<double> accessibility;
 
   final Duration durationPenalty;
-  final int accessibilityPenalty;
+  final double accessibilityPenalty;
 
   const FeatureCost.allowed({
-    this.duration = const [],
-    this.accessibility = const [],
+    this.duration = const [Duration.zero, Duration.zero, Duration.zero],
+    this.accessibility = const [0, 0, 0],
   }) :
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
     qualifier = FeatureCostQualifier.allowed;
 
   const FeatureCost.penalized({
-    this.duration = const [],
-    this.accessibility = const [],
+    this.duration = const [Duration.zero, Duration.zero, Duration.zero],
+    this.accessibility = const [0, 0, 0],
     this.accessibilityPenalty = 0,
     this.durationPenalty = Duration.zero,
   }) :
     qualifier = FeatureCostQualifier.penalized;
 
   const FeatureCost.forbidden() :
-    duration = const [],
-    accessibility = const [],
+    duration = const [Duration.zero, Duration.zero, Duration.zero],
+    accessibility = const [0, 0, 0],
     accessibilityPenalty = 0,
     durationPenalty = Duration.zero,
     qualifier = FeatureCostQualifier.forbidden;
 
 
+  @override
   Map<String, dynamic> toJson() => {
     'duration': duration
       .map((duration) => duration.inSeconds)
@@ -172,6 +123,21 @@ class FeatureCost {
     'accessibility': accessibility,
     'accessibility_penalty': accessibilityPenalty,
     'allowed': qualifier.name,
+  };
+}
+
+/// Maps specific feature variants to multiple cost definitions.
+///
+/// Symbolizes a json entry like `crossing_tertiary	{…}`.
+
+class FeatureCostGroup implements FeatureCostBase {
+  final Map<String, FeatureCost> features;
+
+  const FeatureCostGroup(this.features);
+
+  @override
+  Map<String, dynamic> toJson() => {
+    for (final entry in features.entries) entry.key : entry.value.toJson()
   };
 }
 
@@ -190,7 +156,7 @@ enum FeatureCostQualifier {
       case 'allowed':
       return FeatureCostQualifier.allowed;
       default:
-      throw StateError('Unsopported qualifier $value for FeatureCostQualifier');
+      throw StateError('Unsupported qualifier $value for FeatureCostQualifier');
     }
   }
 }
