@@ -8,7 +8,7 @@ class FlexWithHighlightedChild extends Flex {
   final Duration duration;
   final Curve curve;
 
-  FlexWithHighlightedChild({
+  const FlexWithHighlightedChild({
     required this.vsync,
     required super.direction,
     this.active = -1,
@@ -81,6 +81,7 @@ class RenderFlexWithHighlightedChild extends RenderFlex {
   set active(int value) {
     if (_active != value) {
       _active = value;
+      _animate();
       markNeedsPaint();
     }
   }
@@ -144,10 +145,12 @@ class RenderFlexWithHighlightedChild extends RenderFlex {
     }
   }
 
-  void _updateTween(RectTween tween, Rect targetValue) {
-    tween
-      ..begin = _tween.evaluate(_animation) ?? targetValue
-      ..end = targetValue;
+  void _animate() {
+    // needs to be called before the controller is reset to the start
+    // to interpolate the correct start tween
+    // also fallback to tween.end when tween start is null in which case evaluate will return null
+    _tween.begin = _tween.evaluate(_animation) ?? _tween.end;
+    _controller.forward(from: 0);
   }
 
   @override
@@ -156,14 +159,14 @@ class RenderFlexWithHighlightedChild extends RenderFlex {
       final activeChild = getChildrenAsList()[_active];
       final childParentData = activeChild.parentData as FlexParentData;
       final childPosition = childParentData.offset + offset;
-
       final newRect = childPosition & activeChild.size;
       if (_tween.end != newRect) {
-        _updateTween(_tween, newRect);
-        _controller.forward(from: 0);
+        // set target rect to transition to
+        // can only be set in paint since we do not know the position and sizes in advance
+        _tween.end = newRect;
       }
 
-      final rect = _tween.evaluate(_animation)!;
+      final rect = _tween.evaluate(_animation) ?? newRect;
       final style = Paint()
         ..color = _color
         ..style = PaintingStyle.fill;
