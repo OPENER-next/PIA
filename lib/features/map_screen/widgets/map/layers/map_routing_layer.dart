@@ -36,6 +36,12 @@ class _MapRoutingLayer extends MapLayer<MapRoutingLayer> {
   @override
   Future<void> register() async {
     final collection = description.path.toGeoJsonFeatureCollection();
+
+    final ids = await controller.getSourceIds();
+    if (ids.contains(metricsId) || ids.contains(nometricsId)) {
+      return _setGeoJson(collection);
+    }
+
     await Future.wait([
       // lineMetrics required to allow line gradients when rendering/in styles
       controller.addSource(metricsId, GeojsonSourceProperties(
@@ -55,19 +61,22 @@ class _MapRoutingLayer extends MapLayer<MapRoutingLayer> {
   }
 
   @override
-  Future<void> update(oldDescription) async {
+  Future<void> update(oldDescription) {
     final collection = description.path.toGeoJsonFeatureCollection();
-    await Future.wait([
-      controller.setGeoJsonSource(metricsId, collection),
-      controller.setGeoJsonSource(nometricsId, collection),
-    ]);
+    return _setGeoJson(collection);
   }
 
   @override
-  Future<void> unregister() async {
+  Future<void> unregister() {
+    // remove source doesn't work here, so set empty path
+    final collection = MapRoutingPath(path: []).toGeoJsonFeatureCollection();
+    return _setGeoJson(collection);
+  }
+
+  Future<void> _setGeoJson(Map<String, dynamic> json) async {
     await Future.wait([
-      controller.removeSource(metricsId),
-      controller.removeSource(nometricsId),
+      controller.setGeoJsonSource(metricsId, json),
+      controller.setGeoJsonSource(nometricsId, json),
     ]);
   }
 }
