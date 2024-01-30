@@ -29,5 +29,99 @@
   "poiKeywordPhotoBooth01": "Photo booth",
   "poiKeywordPolice01": "Police",
   "poiKeywordShop01": "Shop",
-  "poiKeywordShop02": "Store"
+  "poiKeywordShop02": "Store",
+
+  "generalProfileTitle": "Routing profile",
+  "generalProfileSpeedLabel": "Speed",
+  "generalProfileSpeedValue": "{speed} km/h",
+  "@generalProfileSpeedValue": {
+    "placeholders": {
+      "speed": {
+        "type": "num",
+        "format": "currency",
+        "optionalParameters": {
+          "customPattern": "0.00",
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "generalProfileMinWidthLabel": "Required width",
+  "generalProfileMinWidthValue": "{width} cm",
+  "@generalProfileMinWidthValue": {
+    "placeholders": {
+      "width": {
+        "type": "num",
+        "format": "currency",
+        "optionalParameters": {
+          "customPattern": "0.00",
+          "decimalDigits": 0
+        }
+      }
+    }
+  },
+  "generalProfileInclineDeclineLabel": "Decline/Incline",
+  "generalProfileInclineDeclineValue": "{incline} to {decline}",
+  "@generalProfileInclineDeclineValue": {
+    "placeholders": {
+      "incline": {
+        "type": "num",
+        "format": "currency",
+        "optionalParameters": {
+          "customPattern": "0.00¤#",
+          "symbol": "%",
+          "decimalDigits": 0
+        }
+      },
+      "decline": {
+        "type": "num",
+        "format": "currency",
+        "optionalParameters": {
+          "customPattern": "0.00¤#",
+          "symbol": "%",
+          "decimalDigits": 0
+        }
+      }
+    }
+  },
+  "generalProfileLevelConnectionsLabel": "Level connections",
+  "generalProfileLevelConnectionsDescription": "Preferred floor changes",
+  "generalProfileCrossingsLabel": "Crossings",
+  "generalProfileCrossingsDescription": "Preferred street crossings",
+  "generalProfileDoorsLabel": "Doors",
+  "generalProfileDoorsDescription": "Preferred door types",
+
+  "presetsButtonSemantic": "Profile presets",
+
+  "presetTitle": "Apply routing preset",
+  "presetWheelchairLabel": "Wheelchair",
+  "presetBlindLabel": "Blind",
+  "presetAssistGuideDogLabel": "Blind with guide dog",
+  "presetAssistWalkerLabel": "Assist walker",
+  "presetBuggyLabel": "Buggy",
+  "presetBicycleLabel": "Bicycle",
+  "presetLuggageLabel": "Luggage",
+  "presetPedestrianLabel": "Pedestrian",
+
+  "levelProfileTitle": "Level connections",
+  "levelProfileStairsUpLabel": "Stairs upwards usable",
+  "levelProfileStairsDownLabel": "Stairs downwards usable",
+  "levelProfileEscalatorLabel": "Escalator usable",
+  "levelProfileMovingWalkwayLabel": "Moving walkway usable",
+  "levelProfileElevatorLabel": "Elevator usable",
+
+  "crossingProfileTitle": "Street crossings",
+  "crossingProfileUnmarkedLabel": "Unmarked crossing usable",
+  "crossingProfileMarkedLabel": "Marked crossing usable",
+  "crossingProfileIslandLabel": "Crossing with island usable",
+  "crossingProfileSignalsLabel": "Crossing with signals usable",
+  "crossingProfileBlindSignalsLabel": "Crossing with blind signals usable",
+
+  "doorProfileTitle": "Doors",
+  "doorProfileManualLabel": "None automatic door usable",
+  "doorProfileAutomaticRevolvingLabel": "Automatic revolving door usable",
+  "doorProfileAutomaticButtonLabel": "Automatic door with button usable",
+  "doorProfileAutomaticSensorLabel": "Automatic door with sensor usable",
+
+  "cancelButton": "Cancel"
 }
