@@ -31,6 +31,10 @@
   "poiKeywordShop01": "Shop",
   "poiKeywordShop02": "Store",
 
+  "routingProfileButtonSemantic": "Routing profile",
+  "findPOIsButtonSemantic": "Find points of interest",
+  "levelBarSemantic": "Level selection",
+
   "generalProfileTitle": "Routing profile",
   "generalProfileSpeedLabel": "Speed",
   "generalProfileSpeedValue": "{speed} km/h",

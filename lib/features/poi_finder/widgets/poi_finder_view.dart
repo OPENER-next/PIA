@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart' hide View;
 import 'package:flutter_mvvm_architecture/base.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../view_models/poi_finder_view_model.dart';
 import '/shared/models/pois.dart';
 
 
 class POIFinderView extends View<POIFinderViewModel> {
-  final Function(POI poi) onSelection;
+  final ValueChanged<POI> onSelection;
 
   const POIFinderView({
     required this.onSelection,
@@ -34,9 +35,12 @@ class POIFinderView extends View<POIFinderViewModel> {
         );
       },
       builder: (context, SearchController controller) {
-        return IconButton(
-          icon: const Icon(Icons.search),
+        final localizations = AppLocalizations.of(context)!;
+        return FloatingActionButton.small(
+          tooltip: localizations.findPOIsButtonSemantic,
+          heroTag: UniqueKey(),
           onPressed: viewModel.open,
+          child: const Icon(Icons.search),
         );
       },
       suggestionsBuilder: (context, SearchController controller) async {
