@@ -17,7 +17,6 @@ class PerPedesRoutingService extends Service with Disposable {
     Uri? apiEndPoint,
   }) : apiEndPoint = apiEndPoint ?? Uri.https('ppr.motis-project.de', 'api/route');
 
-
   Future<List<Route>> request(RoutingRequest request) async {
     final response = await _client.post(
       apiEndPoint,
@@ -30,7 +29,6 @@ class PerPedesRoutingService extends Service with Disposable {
     final decodedResponse = jsonDecode(response.body) as Map<String, dynamic>;
     return RoutingResponse.fromJson(decodedResponse).routes;
   }
-
 
   void dispose() => _client.close();
 
