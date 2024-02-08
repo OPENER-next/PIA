@@ -127,5 +127,19 @@
   "doorProfileAutomaticButtonLabel": "Automatic door with button usable",
   "doorProfileAutomaticSensorLabel": "Automatic door with sensor usable",
 
-  "cancelButton": "Cancel"
+  "cancelButton": "Cancel",
+
+  "startNavigationButton": "Start Navigation",
+
+  "routeInfoTitle": "Duration: {duration} for {distance}",
+  "@routeInfoTitle": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      }
+    }
+  }
 }
