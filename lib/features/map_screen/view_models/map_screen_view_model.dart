@@ -9,6 +9,8 @@ import 'package:mobx/mobx.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:render_metrics/render_metrics.dart';
 
+import '/shared/models/deep_link_actions.dart';
+import '/shared/services/deep_link_service.dart';
 import '/shared/services/config_service.dart';
 import '/shared/services/indoor_positioning_service.dart';
 import '/shared/utils/reactor_mixin.dart';
@@ -61,6 +63,12 @@ class MapViewModel extends ViewModel with Reactor {
         if (!isNavigationActive) showRouteSelection();
       },
     );
+
+    // important: needs to be defined after the reactions are hooked up
+    final deepLinkAction = getService<DeepLinkService>().consume<NavigateAction>();
+    if (deepLinkAction != null) {
+      destinationPosition = deepLinkAction.destination;
+    }
   }
 
   final _isNavigationActive = Observable(false);
