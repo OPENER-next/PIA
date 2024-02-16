@@ -4,7 +4,7 @@
 ## URI Template:
 
 ```
-pia.app?to=$lat;$lon;$level&limitations=$1;$2;$n
+pia.app:///navigate?to=$lat;$lon;$level&limitations=$1;$2;$n
 ```
 
 ### lat
@@ -30,5 +30,5 @@ A list of individual routing profile properties (stairs, elevator, ...) which ar
 ## Example:
 
 ```
-pia.app?to=52.13148;11.62455;2&limitations=elevator;escalator
+pia.app:///navigate?to=52.13028;11.62607;1&limitations=elevator;escalator
 ```
