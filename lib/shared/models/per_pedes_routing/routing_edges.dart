@@ -40,6 +40,9 @@ sealed class RoutingEdge {
 
 
   factory RoutingEdge.fromJson(Map<String, dynamic> json) {
+    if (json['beeline'] == true) {
+      return RoutingEdgeBeeline._fromJson(json);
+    }
     final type = json['edge_type'];
     switch (type) {
       case 'footway':
@@ -84,8 +87,8 @@ sealed class RoutingEdgePath extends RoutingEdge {
   final double distance;
   final int elevationUp;
   final int elevationDown;
-  final bool area;
   final Incline inclineDirection;
+  final bool area;
 
   RoutingEdgePath._fromJson(super.json) :
     path = json['path']
@@ -125,6 +128,10 @@ class RoutingEdgeCycleBarrier extends RoutingEdgePoint {
 }
 
 // paths \\
+
+class RoutingEdgeBeeline extends RoutingEdgePath {
+  RoutingEdgeBeeline._fromJson(super.json) : super._fromJson();
+}
 
 class RoutingEdgeCrossing extends RoutingEdgePath {
   final String type;

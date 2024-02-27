@@ -32,7 +32,9 @@ const layers = [
     'id': 'indoor-routing-path-below-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isLowerLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -46,7 +48,9 @@ const layers = [
     'id': 'indoor-routing-path-below',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isLowerLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isLowerLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -69,7 +73,9 @@ const layers = [
     'id': 'indoor-routing-path-current-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -86,6 +92,7 @@ const layers = [
     'minzoom': 18.0,
     'filter': ['all',
       ['==', ['geometry-type'], 'Point'],
+      _isTrack,
       _connectsToCurrentLevelRoutingFilter
     ],
     'paint': {
@@ -100,7 +107,9 @@ const layers = [
     'id': 'indoor-routing-lower-path-down-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsToLowerLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsToLowerLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -121,7 +130,9 @@ const layers = [
     'id': 'indoor-routing-lower-path-down',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsToLowerLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsToLowerLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -142,7 +153,9 @@ const layers = [
     'id': 'indoor-routing-lower-path-up-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsUpToCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsUpToCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -163,7 +176,9 @@ const layers = [
     'id': 'indoor-routing-lower-path-up',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsUpToCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsUpToCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -187,7 +202,9 @@ const layers = [
     'id': 'indoor-routing-upper-path-down-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsDownToCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsDownToCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -213,7 +230,9 @@ const layers = [
     'id': 'indoor-routing-upper-path-up-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsToUpperLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsToUpperLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -238,7 +257,9 @@ const layers = [
     // required, otherwise line-dasharray will scale with metrics
     'source': 'indoor-routing-path_nometrics',
     'type': 'line',
-    'filter': _isLowerLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isLowerLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
     },
@@ -256,7 +277,9 @@ const layers = [
     'id': 'indoor-routing-path-above-outline',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isUpperLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -273,7 +296,9 @@ const layers = [
     'id': 'indoor-routing-path-current',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -290,6 +315,7 @@ const layers = [
     'minzoom': 18.0,
     'filter': ['all',
       ['==', ['geometry-type'], 'Point'],
+      _isTrack,
       _connectsToCurrentLevelRoutingFilter
     ],
     'paint': {
@@ -304,7 +330,9 @@ const layers = [
     'id': 'indoor-routing-upper-path-down',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsDownToCurrentLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsDownToCurrentLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -326,7 +354,9 @@ const layers = [
     'id': 'indoor-routing-upper-path-up',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _leadsToUpperLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _leadsToUpperLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -351,7 +381,9 @@ const layers = [
     'id': 'indoor-routing-path-above',
     'source': 'indoor-routing-path_metrics',
     'type': 'line',
-    'filter': _isUpperLevelRoutingFilter,
+    'filter': [
+      'all', _isTrack, _isUpperLevelRoutingFilter
+    ],
     'layout': {
       'line-join': 'round',
       'line-cap': 'round',
@@ -359,6 +391,39 @@ const layers = [
     'paint': {
       'line-color': _routingPathOtherLevelFillColor,
       'line-width': _routingPathWidth,
+    },
+  },
+
+  // Indoor routing - Beeline \\
+
+  {
+    'id': 'indoor-routing-path-beeline-outline',
+    'source': 'indoor-routing-path_nometrics',
+    'type': 'line',
+    'filter': _isBeeline,
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': _routingPathOtherLevelOutlineColor,
+      'line-width': _routingPathOutlineWidth,
+      'line-dasharray': ['literal', [0, 0.3 * _routingPathWidth]],
+    },
+  },
+  {
+    'id': 'indoor-routing-path-beeline',
+    'source': 'indoor-routing-path_nometrics',
+    'type': 'line',
+    'filter': _isBeeline,
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
+    'paint': {
+      'line-color': _routingPathOtherLevelFillColor,
+      'line-width': _routingPathWidth,
+      'line-dasharray': ['literal', [0, 0.3 * _routingPathOutlineWidth]],
     },
   },
 
@@ -408,6 +473,14 @@ const _ceilFromLevel = ['ceil', ['to-number', ['get', 'from_level']]];
 const _ceilToLevel = ['ceil', ['to-number', ['get', 'to_level']]];
 const _floorFromLevel = ['floor', ['to-number', ['get', 'from_level']]];
 const _floorToLevel = ['floor', ['to-number', ['get', 'to_level']]];
+
+/// Filter to match only beeline connections.
+
+const _isBeeline = ['==', ['get', 'type'], 'beeline'];
+
+/// Filter to match all all route (none-beeline) connections.
+
+const _isTrack = ['!=', ['get', 'type'], 'beeline'];
 
 /// Filter to match all connections that lie on, cross or connect to the current level.
 

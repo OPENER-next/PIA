@@ -114,6 +114,7 @@ class RoutingStep {
   final String streetType;
   final String crossingType;
   final String side;
+  final bool beeline;
 
   final double distance;
   final Duration duration;
@@ -146,6 +147,7 @@ class RoutingStep {
     streetType = json['street_type'],
     crossingType = json['crossing_type'],
     side = json['side'],
+    beeline = json['beeline'],
     distance = json['distance'],
     duration = _durationFromSeconds(json['duration']),
     accessibility = json['accessibility'],

@@ -180,6 +180,7 @@ class MapRoutingPath extends ListBase<MapRoutingEdge> {
 
   static _typeToName (RoutingEdge edge) {
     switch (edge) {
+      case RoutingEdgeBeeline(): return 'beeline';
       case RoutingEdgeEntrance(): return 'entrance';
       case RoutingEdgeElevator(): return 'elevator';
       case RoutingEdgeCycleBarrier(): return 'cycle_barrier';
