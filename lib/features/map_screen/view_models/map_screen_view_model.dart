@@ -57,12 +57,32 @@ class MapViewModel extends ViewModel with Reactor {
       (_) => _requestRoutes(),
     );
 
-    react(
-      (_) => selectedRoute,
-      (_) {
-        if (!isNavigationActive) showRouteSelection();
-      },
-    );
+    {
+      // when profile or destination changes
+      // wait till the first route change (response from PPR server)
+      // then run a one time
+      // Note: directly waiting on route changes will also fire to often like while navigating
+      ReactionDisposer? awaitNewRoute;
+      react(
+        (_) {
+          _routingProfile.value;
+          destinationPosition;
+        },
+        (_) {
+          awaitNewRoute?.call();
+          awaitNewRoute = when((p0) {
+            selectedRoute;
+            return true;
+          }, showRouteSelection);
+        },
+        equals: (p0, p1) => false,
+      );
+      // when selection changes
+      react(
+        (_) => selectedRouteIndex,
+        (_) => showRouteSelection(),
+      );
+    }
 
     // important: needs to be defined after the reactions are hooked up
     final deepLinkAction = getService<DeepLinkService>().consume<NavigateAction>();
@@ -70,9 +90,6 @@ class MapViewModel extends ViewModel with Reactor {
       destinationPosition = deepLinkAction.destination;
     }
   }
-
-  final _isNavigationActive = Observable(false);
-  bool get isNavigationActive => _isNavigationActive.value;
 
 
   // can only be used in overlay
