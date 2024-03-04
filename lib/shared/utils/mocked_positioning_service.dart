@@ -29,8 +29,10 @@ class MockedPositioningService {
       .toList(growable: false);
 
     _subscription = Stream<Position>.periodic(interval, (index) {
-      final wrappedIndex = index % points.length;
-      return points[wrappedIndex];
+      if (index >= points.length) {
+        _subscription?.cancel();
+      }
+      return points[index];
     }).listen((p) => runInAction(() => _position.value = p));
   }
 
