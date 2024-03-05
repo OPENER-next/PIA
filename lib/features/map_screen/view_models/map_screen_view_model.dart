@@ -29,7 +29,10 @@ class MapViewModel extends ViewModel with Reactor {
   MapViewModel() {
     react(
       (_) => indoorPosition,
-      (_) => _updateIndoorPositionLayer(),
+      (_) {
+        _updateIndoorPositionLayer();
+        _updateLevel();
+      },
       fireImmediately: true,
     );
 
@@ -70,10 +73,10 @@ class MapViewModel extends ViewModel with Reactor {
         },
         (_) {
           awaitNewRoute?.call();
-          awaitNewRoute = when((p0) {
-            selectedRoute;
-            return true;
-          }, showRouteSelection);
+          awaitNewRoute = reaction((p0) => selectedRoute, (p0) {
+            awaitNewRoute?.call();
+            showRouteSelection();
+          });
         },
         equals: (p0, p1) => false,
       );
@@ -136,14 +139,14 @@ class MapViewModel extends ViewModel with Reactor {
 
   bool get hasAnyRoutes => _routes.isNotEmpty;
 
-  String  routeDistanceFormatted(int index) {
+  String routeDistanceFormatted(int index) {
     final distance = _routes[index].details!.distance;
     return distance < 999
       ? '${distance.toStringAsFixed(0)}m'
       : '${(distance/1000).toStringAsFixed(2)}km';
   }
 
-  String  routeDurationFormatted(int index) {
+  String routeDurationFormatted(int index) {
     final duration = _routes[index].details!.duration;
     return duration.toDurationString(
       round: false,
@@ -281,6 +284,12 @@ class MapViewModel extends ViewModel with Reactor {
     }
     else {
       mapLayerManager.remove('indoor-position');
+    }
+  }
+
+  void _updateLevel() {
+    if (indoorPosition != null) {
+      levelController.changeLevel(indoorPosition!.level);
     }
   }
 
