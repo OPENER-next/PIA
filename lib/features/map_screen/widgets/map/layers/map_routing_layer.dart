@@ -86,15 +86,27 @@ class _MapRoutingLayer extends MapLayer<MapRoutingLayer> {
 ///
 /// Can be created from PPR [RoutingEdge]s.
 
-class MapRoutingPath extends ListBase<MapRoutingEdge> {
-  final List<MapRoutingEdge> _path;
+class MapRoutingPath extends IterableBase<MapRoutingEdge> {
+  final DoubleLinkedQueue<MapRoutingEdge> _path;
 
   MapRoutingPath({
     required List<MapRoutingEdge> path,
-  }) : _path = path;
+  }) : _path = DoubleLinkedQueue.of(path);
 
   MapRoutingPath.fromEdges(Iterable<RoutingEdge> edges) :
-    _path = _edgesToSegments(edges).toList();
+    _path = DoubleLinkedQueue.of(_edgesToSegments(_filter(edges)));
+
+  /// Filter edges by pre-defined criteria.
+
+  static Iterable<RoutingEdge> _filter(Iterable<RoutingEdge> edges) {
+    return edges.where((element) {
+      if (element is RoutingEdgeEntrance && element.doorType == 'no') {
+        return false;
+      }
+      return true;
+    });
+  }
+
 
   /// Maps all [RoutingEdge]s of the routing path to [MapRoutingEdge]s.
   ///
@@ -205,17 +217,7 @@ class MapRoutingPath extends ListBase<MapRoutingEdge> {
   int get length => _path.length;
 
   @override
-  set length(int value) => _path.length = value;
-
-  @override
-  MapRoutingEdge operator [](int index) {
-    return _path[index];
-  }
-
-  @override
-  void operator []=(int index, MapRoutingEdge value) {
-    _path[index] = value;
-  }
+  Iterator<MapRoutingEdge> get iterator => _path.iterator;
 }
 
 
