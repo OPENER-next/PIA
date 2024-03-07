@@ -142,50 +142,51 @@ class ProfilePresets extends StatelessWidget {
       title: Text(localizations.presetTitle),
       content: Scrollbar(
         thumbVisibility: true,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            ListTile(
-              title: Text(localizations.presetWheelchairLabel),
-              leading: const Icon(MdiIcons.wheelchairAccessibility),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.wheelchair),
-            ),
-            ListTile(
-              title: Text(localizations.presetBlindLabel),
-              leading: const Icon(Icons.blind_rounded),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.blind),
-            ),
-            ListTile(
-              title: Text(localizations.presetAssistGuideDogLabel),
-              leading: const Icon(MdiIcons.dogService),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.guideDog),
-            ),
-            ListTile(
-              title: Text(localizations.presetAssistWalkerLabel),
-              leading: const Icon(Icons.assist_walker),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.assistWalker),
-            ),
-            ListTile(
-              title: Text(localizations.presetBuggyLabel),
-              leading: const Icon(Icons.child_friendly_rounded),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.buggy),
-            ),
-            ListTile(
-              title: Text(localizations.presetBicycleLabel),
-              leading: const Icon(Icons.pedal_bike_rounded),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.bicycle),
-            ),
-            ListTile(
-              title: Text(localizations.presetLuggageLabel),
-              leading: const Icon(Icons.luggage_rounded),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.luggage),
-            ),
-            ListTile(
-              title: Text(localizations.presetPedestrianLabel),
-              leading: const Icon(Icons.directions_walk_rounded),
-              onTap: () => Navigator.of(context).pop(UserProfilePresets.unrestricted),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text(localizations.presetWheelchairLabel),
+                leading: const Icon(MdiIcons.wheelchairAccessibility),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.wheelchair),
+              ),
+              ListTile(
+                title: Text(localizations.presetBlindLabel),
+                leading: const Icon(Icons.blind_rounded),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.blind),
+              ),
+              ListTile(
+                title: Text(localizations.presetAssistGuideDogLabel),
+                leading: const Icon(MdiIcons.dogService),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.guideDog),
+              ),
+              ListTile(
+                title: Text(localizations.presetAssistWalkerLabel),
+                leading: const Icon(Icons.assist_walker),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.assistWalker),
+              ),
+              ListTile(
+                title: Text(localizations.presetBuggyLabel),
+                leading: const Icon(Icons.child_friendly_rounded),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.buggy),
+              ),
+              ListTile(
+                title: Text(localizations.presetBicycleLabel),
+                leading: const Icon(Icons.pedal_bike_rounded),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.bicycle),
+              ),
+              ListTile(
+                title: Text(localizations.presetLuggageLabel),
+                leading: const Icon(Icons.luggage_rounded),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.luggage),
+              ),
+              ListTile(
+                title: Text(localizations.presetPedestrianLabel),
+                leading: const Icon(Icons.directions_walk_rounded),
+                onTap: () => Navigator.of(context).pop(UserProfilePresets.unrestricted),
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
