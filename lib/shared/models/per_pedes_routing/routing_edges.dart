@@ -36,7 +36,7 @@ sealed class RoutingEdge {
     maxWidth = json['max_width'] ?? double.infinity,
     durationPenalty = _durationFromSeconds(json['duration_penalty']),
     accessibilityPenalty = json['accessibility_penalty'],
-    level = Level.fromNumber(json['level']);
+    level = Level.fromNumber(json['level'] ?? 0);
 
 
   factory RoutingEdge.fromJson(Map<String, dynamic> json) {
