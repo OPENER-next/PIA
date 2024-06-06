@@ -20,12 +20,14 @@ class MockedPositioningService {
 
   void walkRoute(Route route, {
     Duration interval = const Duration(milliseconds: 100),
+    double stepSize = 1,
+    double jitter = 1,
   }) {
     _subscription?.cancel();
 
     final points = _edgesToPoints(route.edges)
-      .subdivide()
-      .jitter()
+      .subdivide(stepSize: stepSize)
+      .jitter(maxJitterDistance: jitter)
       .toList(growable: false);
 
     _subscription = Stream<Position>.periodic(interval, (index) {
