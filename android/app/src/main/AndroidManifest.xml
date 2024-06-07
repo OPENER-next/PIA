@@ -2,11 +2,17 @@
     package="com.example.pia">
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" android:minSdkVersion="34" />
+
     <application
         android:label="pia"
         android:name="${applicationName}"
         tools:replace="android:name"
         android:icon="@mipmap/ic_launcher">
+        <service
+            android:name="de.easylocate.sdk.android.service.EasyLocateService"
+            android:exported="true"
+            android:foregroundServiceType="connectedDevice" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
