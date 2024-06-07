@@ -10,6 +10,12 @@ import '/shared/models/per_pedes_routing/ppr.dart';
 sealed class AccessibilityGrade {
   final double value;
 
+  bool get isAccessible => value == 1;
+
+  bool get isAdverselyAccessible => value > 0 && value < 1;
+
+  bool get isInaccessible => value == 0;
+
   double get maxCost => 50;
 
   double get cost => (1 - value) * maxCost;

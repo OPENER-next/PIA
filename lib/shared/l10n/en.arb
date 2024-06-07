@@ -141,5 +141,75 @@
         "type": "String"
       }
     }
+  },
+
+  "routeDiscomfortDoor": "{count, plural, =1{1 Door} other{{count} Doors}}",
+  "@routeDiscomfortDoor": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "routeDiscomfortStairsUp": "{count, plural, =1{1 Step} other{{count} Steps}} up",
+  "@routeDiscomfortStairsUp": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "routeDiscomfortStairsDown": "{count, plural, =1{1 Step} other{{count} Steps}} down",
+  "@routeDiscomfortStairsDown": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "routeDiscomfortCrossingWithSignals": "{count, plural, =1{1 Crossing} other{{count} Regulated crossings}}",
+  "@routeDiscomfortCrossingWithSignals": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "routeDiscomfortCrossingWithoutSignals": "{count, plural, =1{1 Crossing} other{{count} Unregulated crossings}}",
+  "@routeDiscomfortCrossingWithoutSignals": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "compact"
+      }
+    }
+  },
+  "routeDiscomfortElevator": "{duration} Elevator travel time",
+  "@routeDiscomfortElevator": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "routeDiscomfortMovingWalkway": "{duration} Moving walkway travel time",
+  "@routeDiscomfortMovingWalkway": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "routeDiscomfortEscalator": "{duration} Escalator travel time",
+  "@routeDiscomfortEscalator": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
   }
 }

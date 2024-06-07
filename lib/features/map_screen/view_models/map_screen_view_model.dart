@@ -9,6 +9,7 @@ import 'package:mobx/mobx.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:render_metrics/render_metrics.dart';
 
+import '../models/route_discomforts.dart';
 import '/shared/models/deep_link_actions.dart';
 import '/shared/services/deep_link_service.dart';
 import '/shared/services/config_service.dart';
@@ -153,6 +154,13 @@ class MapViewModel extends ViewModel with Reactor {
       dropPrefixOrSuffix: true,
       form: Abbreviation.semi,
       format: DurationFormat.ms,
+    );
+  }
+
+  RouteDiscomforts routeDiscomforts(int index) {
+    return RouteDiscomforts(
+      route: _routes[index],
+      profile: _configService.userProfile,
     );
   }
 
