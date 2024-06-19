@@ -154,7 +154,8 @@ class UserProfile {
       ..apply(blindSignalsCrossing);
 
     return RoutingProfile(
-      walkingSpeed: speed,
+      // convert to meters per second
+      walkingSpeed: speed * (5/18),
       minRequiredWidth: minRequiredWidth,
       minAllowedIncline: maxDecline,
       maxAllowedIncline: maxIncline,
