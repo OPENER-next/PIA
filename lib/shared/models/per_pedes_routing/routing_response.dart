@@ -49,27 +49,6 @@ class Route {
     edges = json['edges']
       ?.map<RoutingEdge>((item) => RoutingEdge.fromJson(item))
       .toList(growable: false) ?? const [];
-
-  /// Returns the latitude and longitude bounds for this route.
-
-  maplibre.LatLngBounds get bounds {
-    double minX = 180;
-    double maxX = -180;
-    double minY = 90;
-    double maxY = -90;
-
-    for (final point in path) {
-      minX = min(minX, point.longitude);
-      minY = min(minY, point.latitude);
-      maxX = max(maxX, point.longitude);
-      maxY = max(maxY, point.latitude);
-    }
-
-    return maplibre.LatLngBounds(
-      southwest: maplibre.LatLng(minY, minX),
-      northeast: maplibre.LatLng(maxY, maxX),
-    );
-  }
 }
 
 
