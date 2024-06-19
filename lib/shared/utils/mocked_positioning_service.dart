@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:latlong2/latlong.dart';
 import 'package:mobx/mobx.dart';
 
-import '../models/per_pedes_routing/ppr.dart';
+import '/features/map_screen/models/live_route_segment.dart';
 import '../models/position.dart';
 
 
@@ -18,14 +18,14 @@ class MockedPositioningService {
 
   StreamSubscription<Position>? _subscription;
 
-  void walkRoute(Route route, {
+  void walkRoute(Iterable<LiveRouteSegment> edges, {
     Duration interval = const Duration(milliseconds: 100),
     double stepSize = 1,
     double jitter = 1,
   }) {
     _subscription?.cancel();
 
-    final points = _edgesToPoints(route.edges)
+    final points = _edgesToPoints(edges)
       .subdivide(stepSize: stepSize)
       .jitter(maxJitterDistance: jitter)
       .toList(growable: false);
@@ -38,25 +38,12 @@ class MockedPositioningService {
     }).listen((p) => runInAction(() => _position.value = p));
   }
 
-  Iterable<Position> _edgesToPoints(Iterable<RoutingEdge> edges) {
-    return edges.expand((edge) sync* {
-      if (edge is RoutingEdgePoint) {
-        yield Position(
-          edge.point.latitude,
-          edge.point.longitude,
-          level: edge.level,
-        );
-      }
-      else if (edge is RoutingEdgePath) {
-        for (final point in edge.path) {
-          yield Position(
-            point.latitude,
-            point.longitude,
-            level: edge.level,
-          );
-        }
-      }
-    });
+  Iterable<Position> _edgesToPoints(Iterable<LiveRouteSegment> edges) {
+    return edges.expand((edge) => edge.path.map((point) => Position(
+      point.latitude,
+      point.longitude,
+      level: edge.fromLevel,
+    )));
   }
 
   void dispose() {

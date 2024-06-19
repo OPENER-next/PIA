@@ -1,5 +1,6 @@
 import '/shared/models/per_pedes_routing/ppr.dart';
 import '../../routing_profile/models/user_profile.dart';
+import 'live_route.dart';
 
 /// Extracts all discomforts of a given route for a given user profile.
 ///
@@ -10,7 +11,7 @@ class RouteDiscomforts {
   late final Map<DiscomfortType, int> stats;
 
   RouteDiscomforts({
-    required Route route,
+    required LiveRoute route,
     required UserProfile profile,
   }) {
     edges = _complicationsFilter(profile, route.edges).toList(growable: false);

@@ -9,6 +9,7 @@ import 'package:mobx/mobx.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:render_metrics/render_metrics.dart';
 
+import '../models/live_route.dart';
 import '../models/route_discomforts.dart';
 import '/shared/models/deep_link_actions.dart';
 import '/shared/services/deep_link_service.dart';
@@ -39,8 +40,13 @@ class MapViewModel extends ViewModel with Reactor {
 
     react(
       (_) => indoorPosition,
-      (_) => _requestRoutes(),
-      delay: 1000,
+      (_) {
+        if (selectedRoute != null) {
+          if (!selectedRoute!.fitTo(indoorPosition!, maxDeviation: 3)) {
+            _requestRoutes();
+          }
+        }
+      }
     );
 
     react(
@@ -52,8 +58,11 @@ class MapViewModel extends ViewModel with Reactor {
     );
 
     react(
-      (_) => routingPath,
+      // listen to route selection changes and route modifications
+      (_) => selectedRoute?.edges.length,
       (_) => _updateRoutingLayer(),
+      // required since we return length
+      equals: (p0, p1) => false,
     );
 
     react(
@@ -134,21 +143,21 @@ class MapViewModel extends ViewModel with Reactor {
 
   // ROUTES \\
 
-  final _routes = ObservableList<Route>();
+  final _routes = ObservableList<LiveRoute>();
 
   int get routeCount => _routes.length;
 
   bool get hasAnyRoutes => _routes.isNotEmpty;
 
   String routeDistanceFormatted(int index) {
-    final distance = _routes[index].details!.distance;
+    final distance = _routes[index].distance;
     return distance < 999
       ? '${distance.toStringAsFixed(0)}m'
       : '${(distance/1000).toStringAsFixed(2)}km';
   }
 
   String routeDurationFormatted(int index) {
-    final duration = _routes[index].details!.duration;
+    final duration = _routes[index].duration;
     return duration.toDurationString(
       round: false,
       dropPrefixOrSuffix: true,
@@ -160,7 +169,6 @@ class MapViewModel extends ViewModel with Reactor {
   RouteDiscomforts routeDiscomforts(int index) {
     return RouteDiscomforts(
       route: _routes[index],
-      profile: _configService.userProfile,
     );
   }
 
@@ -174,7 +182,7 @@ class MapViewModel extends ViewModel with Reactor {
       ));
       runInAction(() {
         _routes.clear();
-        _routes.addAll(routes);
+        _routes.addAll(routes.map(LiveRoute.fromRawRoute));
         _routes.sort(_sortByDuration);
         // ensure if route count changes that the index is still valid
         selectRoute(math.min(selectedRouteIndex, routeCount - 1));
@@ -188,8 +196,8 @@ class MapViewModel extends ViewModel with Reactor {
   /// We might get new routes or loose routes on the way
   /// That is why it is important to sort the routes
 
-  int _sortByDuration(Route a, Route b) {
-    return (a.details!.duration - b.details!.duration).inSeconds.toInt();
+  int _sortByDuration(LiveRoute a, LiveRoute b) {
+    return (a.duration - b.duration).inSeconds.toInt();
   }
 
   // ROUTE SELECTION \\
@@ -228,25 +236,12 @@ class MapViewModel extends ViewModel with Reactor {
     runInAction(() => _selectedRouteIndex.value = index);
   }
 
-  Route? get selectedRoute {
-    if (selectedRouteIndex > -1 && selectedRouteIndex < _routes.length) {
+  LiveRoute? get selectedRoute {
+    if (selectedRouteIndex < _routes.length && selectedRouteIndex > -1) {
       return _routes[selectedRouteIndex];
     }
     return null;
   }
-
-  late final _routingPath = Computed(() {
-    if (indoorPosition != null && selectedRoute != null) {
-      final route = MapRoutingPath.fromEdges(selectedRoute!.edges);
-      if (route.isNotEmpty) {
-        // always ignore start point and replace it with the current user location
-        route.first.path[0] = indoorPosition!;
-        return route;
-      }
-    }
-    return null;
-  });
-  MapRoutingPath? get routingPath => _routingPath.value;
 
   void _focusCurrentRoute() {
     if (selectedRoute != null) {
@@ -274,9 +269,9 @@ class MapViewModel extends ViewModel with Reactor {
   });
 
   void _updateRoutingLayer() {
-    if (routingPath != null) {
+    if (selectedRoute != null) {
       mapLayerManager.set('indoor-routing-path', MapRoutingLayer(
-        path: routingPath!,
+        path: selectedRoute!,
       ));
     }
     else {

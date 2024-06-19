@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:maplibre_gl/maplibre_gl.dart' hide LatLng;
 
-import '../../../models/map_routing_path.dart';
+import '../../../models/live_route.dart';
 import '../map_layer_manager.dart';
 
 /// **Note**: This will add two sources by appending `_metrics` and `_nometrics` to the id.
 
 class MapRoutingLayer implements MapLayerDescription {
-  final MapRoutingPath path;
+  final LiveRoute path;
 
   final String metricsIdSuffix;
   final String nometricsIdSuffix;
@@ -66,7 +66,7 @@ class _MapRoutingLayer extends MapLayer<MapRoutingLayer> {
   @override
   Future<void> unregister() {
     // remove source doesn't work here, so set empty path
-    final collection = MapRoutingPath(path: []).toGeoJsonFeatureCollection();
+    final collection = LiveRoute([]).toGeoJsonFeatureCollection();
     return _setGeoJson(collection);
   }
 
