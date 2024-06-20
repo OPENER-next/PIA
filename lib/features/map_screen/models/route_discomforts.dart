@@ -1,122 +1,61 @@
-import '/shared/models/per_pedes_routing/ppr.dart';
-import '../../routing_profile/models/user_profile.dart';
 import 'live_route.dart';
+import 'live_route_segment.dart';
 
 /// Extracts all discomforts of a given route for a given user profile.
 ///
 /// A discomfort is e.g. if a user wants to avoid stairs but the route goes along stairs.
 
 class RouteDiscomforts {
-  late final List<RoutingEdge> edges;
   late final Map<DiscomfortType, int> stats;
 
   RouteDiscomforts({
     required LiveRoute route,
-    required UserProfile profile,
-  }) {
-    edges = _complicationsFilter(profile, route.edges).toList(growable: false);
-    stats = _complicationStats(edges);
-  }
+  }) : stats = _complicationStats(route.edges);
 
-  static Iterable<RoutingEdge> _complicationsFilter(UserProfile profile, Iterable<RoutingEdge> edges) {
-    return edges.where((edge) {
-      if (edge is RoutingEdgeEntrance) {
-        if (edge.automaticDoorType == 'continuous' || edge.automaticDoorType == 'slowdown_button') {
-          return profile.automaticRevolvingDoor.isAdverselyAccessible;
-        }
-        if (edge.automaticDoorType == 'button') {
-          return profile.buttonDoor.isAdverselyAccessible;
-        }
-        if (edge.automaticDoorType == 'motion') {
-          return profile.sensorDoor.isAdverselyAccessible;
-        }
-        if (edge.automaticDoorType == 'no' || edge.automaticDoorType.isEmpty) {
-          return profile.manualDoor.isAdverselyAccessible;
-        }
-      }
-      else if (edge is RoutingEdgeCrossing) {
-        if (edge.type == 'blind_signals') {
-          return profile.blindSignalsCrossing.isAdverselyAccessible;
-        }
-        if (edge.type == 'signals') {
-          return profile.signalsCrossing.isAdverselyAccessible;
-        }
-        if (edge.type == 'island') {
-          return profile.islandCrossing.isAdverselyAccessible;
-        }
-        if (edge.type == 'marked') {
-          return profile.markedCrossing.isAdverselyAccessible;
-        }
-        if (edge.type == 'unmarked') {
-          return profile.unmarkedCrossing.isAdverselyAccessible;
-        }
-      }
-      else if (edge is RoutingEdgeStairs) {
-        if (edge.inclineDirection == Incline.down) {
-          return profile.stairsDown.isAdverselyAccessible;
-        }
-        else {
-          return profile.stairsUp.isAdverselyAccessible;
-        }
-      }
-      else if (edge is RoutingEdgeEscalator) {
-        return profile.escalator.isAdverselyAccessible;
-      }
-      else if (edge is RoutingEdgeMovingWalkway) {
-        return profile.movingWalkway.isAdverselyAccessible;
-      }
-      else if (edge is RoutingEdgeElevator) {
-        return profile.elevator.isAdverselyAccessible;
-      }
-      return false;
-    });
-  }
-
-
-  static Map<DiscomfortType, int> _complicationStats(Iterable<RoutingEdge> edges) {
+  static Map<DiscomfortType, int> _complicationStats(Iterable<LiveRouteSegment> edges) {
     final stats = <DiscomfortType, int>{};
-    for (final edge in edges) {
+
+    for (final edge in edges.where((e) => e.discomfort)) {
       final int value;
       final DiscomfortType type;
 
-      if (edge is RoutingEdgeEntrance) {
-        type = DiscomfortType.door;
-        value = 1;
-      }
-      else if (edge is RoutingEdgeCrossing) {
-        if (edge.type == 'blind_signals' || edge.type == 'signals') {
+      switch (edge.type) {
+        case LiveRouteSegmentType.entrance:
+          type = DiscomfortType.door;
+          value = 1;
+        break;
+        case LiveRouteSegmentType.elevator:
+          type = DiscomfortType.elevator;
+          value = edge.duration.inSeconds;
+        break;
+        case LiveRouteSegmentType.controlledStreetCrossing:
           type = DiscomfortType.crossingWithSignals;
           value = 1;
-        }
-        else {
+        break;
+        case LiveRouteSegmentType.uncontrolledStreetCrossing:
           type = DiscomfortType.crossingWithoutSignals;
           value = 1;
-        }
-      }
-      else if (edge is RoutingEdgeStairs) {
-        if (edge.inclineDirection == Incline.down) {
-          type = DiscomfortType.stairsDown;
-          value = (edge.distance / 0.3).round(); // roughly estimate steps
-        }
-        else {
-          type = DiscomfortType.stairsUp;
-          value = (edge.distance / 0.3).round(); // roughly estimate steps
-        }
-      }
-      else if (edge is RoutingEdgeEscalator) {
-        type = DiscomfortType.escalator;
-        value = edge.duration.inSeconds;
-      }
-      else if (edge is RoutingEdgeMovingWalkway) {
-        type = DiscomfortType.movingWalkway;
-        value = edge.duration.inSeconds;
-      }
-      else if (edge is RoutingEdgeElevator) {
-        type = DiscomfortType.elevator;
-        value = edge.duration.inSeconds;
-      }
-      else {
-        throw UnimplementedError('Given edge $edge has no implementation.');
+        break;
+        case LiveRouteSegmentType.stairs:
+          if (edge.fromLevel > edge.toLevel) {
+            type = DiscomfortType.stairsDown;
+            value = (edge.distance / 0.3).round(); // roughly estimate steps
+          }
+          else {
+            type = DiscomfortType.stairsUp;
+            value = (edge.distance / 0.3).round(); // roughly estimate steps
+          }
+        break;
+        case LiveRouteSegmentType.escalator:
+          type = DiscomfortType.escalator;
+          value = edge.duration.inSeconds;
+        break;
+        case LiveRouteSegmentType.movingWalkway:
+          type = DiscomfortType.movingWalkway;
+          value = edge.duration.inSeconds;
+        break;
+        default:
+          throw UnimplementedError('Given edge $edge has no implementation.');
       }
 
       stats.update(type,

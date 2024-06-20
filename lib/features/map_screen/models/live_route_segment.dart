@@ -95,7 +95,8 @@ enum LiveRouteSegmentType {
   entrance('entrance'),
   elevator('elevator'),
   cycleBarrier('cycle_barrier'),
-  streetCrossing('street_crossing'),
+  controlledStreetCrossing('controlled_street_crossing'),
+  uncontrolledStreetCrossing('uncontrolled_street_crossing'),
   street('street'),
   footway('footway'),
   stairs('stairs'),
@@ -113,7 +114,10 @@ enum LiveRouteSegmentType {
       case RoutingEdgeEntrance(): return LiveRouteSegmentType.entrance;
       case RoutingEdgeElevator(): return LiveRouteSegmentType.elevator;
       case RoutingEdgeCycleBarrier(): return LiveRouteSegmentType.cycleBarrier;
-      case RoutingEdgeCrossing(): return LiveRouteSegmentType.streetCrossing;
+      case RoutingEdgeCrossing():
+        return edge.type == 'blind_signals' || edge.type == 'signals'
+          ? LiveRouteSegmentType.controlledStreetCrossing
+          : LiveRouteSegmentType.uncontrolledStreetCrossing;
       case RoutingEdgeStreet(): return LiveRouteSegmentType.street;
       case RoutingEdgeFootway(): return LiveRouteSegmentType.footway;
       case RoutingEdgeStairs(): return LiveRouteSegmentType.stairs;
