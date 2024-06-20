@@ -6,10 +6,11 @@ import 'package:easylocate_flutter_sdk/tracelet_api.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 
 import 'package:mobx/mobx.dart';
 
-import '../models/position.dart';
+import '/shared/models/position.dart';
 
 /// Provides functionality to connect to a uwb tracelet, and receive position values
 ///
@@ -66,6 +67,8 @@ class IndoorPositioningService extends Service implements Disposable {
   /// Retrieves the currently connected bluetooth tracelet. Null when no device is found
   BleDevice? get bluetoothTracelet => _bluetoothTracelet.value;
 
+  final log = Logger('Tracelet API');
+
   // ------------------  Tracelet Connecting & Disconnecting-------------------//
 
   /// Connects to the Tracelet on Channel 5 with the closest RSSI value, and starts monitoring the positions.
@@ -83,59 +86,57 @@ class IndoorPositioningService extends Service implements Disposable {
       final scanListener = BluetoothScanListener();
       EasyLocateSdk easyLocateSdk = EasyLocateSdk();
       // Starts scanning and looks for tracelets for 5 seconds
-      debugPrint('Start Scanning for Tracelets');
+      log.info('Start Scanning for Tracelets');
       await easyLocateSdk.startTraceletScan(
         scanListener,
         scanTimeout: 5,
       );
       // Gets the closest bluetooth tracelet available
       final bluetoothTracelet = scanListener.bleDevice;
-      debugPrint('Tracelets Found ${bluetoothTracelet?.name}');
+      log.info('Tracelets Found ${bluetoothTracelet?.name}');
       // Stops bluetooth tracelet scanning
       await easyLocateSdk.stopBleScan();
-      debugPrint('Stop Scanning');
+      log.info('Stop Scanning');
 
       // Continue only if a ble Tracelet is found
       if (bluetoothTracelet != null) {
         // Connect to the bluetooth tracelet
-        debugPrint('Connecting to Tracelet');
+        log.info('Connecting to Tracelet');
         _positioningApi = await _easyLocateSdk.connectBleTracelet(
           bluetoothTracelet,
           ConnectionListener(
             onConnected: () async {
               runInAction(() => _isConnected.value = true);
-              debugPrint(
-                  'Tracelet Connected. To verify look for a blue flashing light on the device');
+              log.info('Tracelet Connected. To verify look for a blue flashing light on the device');
               // A blue LED blinks on the connected device. This can be used to verify if you're connected to the right device
               await _positioningApi!.showMe();
 
-              debugPrint('Setting channel to Channel 5');
+              log.info('Setting channel to Channel 5');
               // Set the channel to 5 (6.5 GHz). For dw1k tracelets, channel setting is not required as the tracelets operate only on 6.5Ghz
               final channelStatus = await _positioningApi!
                   .setChannel(Channel.FIVE)
                   .timeout(const Duration(seconds: 3));
-              debugPrint(channelStatus
-                  ? 'Channel Set Successfully '
-                  : 'Channel Not Set');
-
+              channelStatus
+                ? log.info('Channel Set Successfully')
+                : log.shout('Channel Not Set');
               // Sets the reference wgs84 position. This should be the wgs84 position of the origin
               // By default the tracelet does not know its position in LatLng coordinates,
               // but instead it know the distance in meters from the origin, and it uses the
               // wgs84 coordinates of the origin to find its own position in the real world
-              debugPrint('Setting reference wgs84 position');
+              log.info('Setting reference wgs84 position');
               await _positioningApi!.setWgs84Reference(
                   referenceLatitude, referenceLongitude, referenceAzimuth);
 
               // Sets the positioning interval to 250ms. This means that we can get 4 position values every second
-              debugPrint('Setting up positioning interval');
+              log.info('Setting up positioning interval');
               await _positioningApi!.setPositioningInterval(1);
 
               // Sets the motion check interval to 0. This disables checking if there is motion on the tracelet
-              debugPrint('Setting up motion check interval');
+              log.info('Setting up motion check interval');
               await _positioningApi!.setMotionCheckInterval(0);
 
               // Start positioning. Uses the position listener to get wgs84 values
-              debugPrint('Start Positioning');
+              log.info('Start Positioning');
               await _positioningApi!.startPositioning(
                 PositionListener(
                   onWgs84PositionUpdated: (position) {
@@ -153,7 +154,7 @@ class IndoorPositioningService extends Service implements Disposable {
                 _wgs84Position.value = null;
               });
               // Takes 1 second after disconnectTracelet() runs to execute
-              debugPrint('Tracelet Disconnected');
+              log.info('Tracelet Disconnected');
             },
           ),
         );
@@ -164,14 +165,14 @@ class IndoorPositioningService extends Service implements Disposable {
         _isConnected.value = false;
         _wgs84Position.value = null;
       });
-      debugPrint(error.toString());
+      log.info(error.toString());
     }
   }
 
   /// Disconnects from a Tracelet
   void disconnectTracelet() async {
     if (_positioningApi != null) {
-      debugPrint('Disconnecting Tracelet');
+      log.info('Disconnecting Tracelet');
       await _positioningApi!.stopPositioning();
       // The tracelet takes 1s to disconnect
       _positioningApi!.disconnect();
@@ -182,10 +183,10 @@ class IndoorPositioningService extends Service implements Disposable {
   @override
   FutureOr onDispose() {
     if (_positioningApi != null) {
-      debugPrint(' Disconnecting Tracelet');
+      log.info(' Disconnecting Tracelet');
       _positioningApi!.disconnect();
     }
-    debugPrint('Service disposed successfully');
+    log.info('Service disposed successfully');
   }
 }
 

@@ -9,6 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'shared/services/deep_link_service.dart';
 import 'shared/services/indoor_positioning_service.dart';
 import 'shared/services/config_service.dart';
+import 'shared/services/logging_service.dart';
 
 void main() async {
   // required for system chrome
@@ -21,6 +22,8 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   GetIt.I.registerSingleton(await DeepLinkService.init());
+
+  GetIt.I.registerSingleton(LoggingService());
 
   GetIt.I.registerSingleton(IndoorPositioningService(
     referenceLatitude: 52.13052287240374,
