@@ -259,11 +259,6 @@ class MapViewModel extends ViewModel with Reactor {
     }
   }
 
-
-  Future<void> connectToTracelet() async {
-    _indoorPositioningService.connectTracelet();
-  }
-
   late final _routingProfile = Computed<RoutingProfile>(() {
     return _configService.userProfile.toRoutingProfile();
   });
@@ -311,7 +306,6 @@ class MapViewModel extends ViewModel with Reactor {
   void dispose() {
     levelController.dispose();
     _ppr.dispose();
-    _indoorPositioningService.onDispose();
     routePageController?.dispose();
     super.dispose();
   }

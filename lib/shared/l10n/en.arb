@@ -31,9 +31,11 @@
   "poiKeywordShop01": "Shop",
   "poiKeywordShop02": "Store",
 
-  "routingProfileButtonSemantic": "Routing profile",
+  "routingProfileButtonSemantic": "Open routing profile",
   "findPOIsButtonSemantic": "Find points of interest",
   "levelBarSemantic": "Level selection",
+  "routeSelectionButtonSemantic": "Open route selection",
+  "indoorPositioningButtonSemantic": "Open indoor positioning dialog",
 
   "generalProfileTitle": "Routing profile",
   "generalProfileSpeedLabel": "Speed",
@@ -130,6 +132,10 @@
   "cancelButton": "Cancel",
 
   "startNavigationButton": "Start Navigation",
+
+  "indoorPositioningDialogHeading": "Indoor positioning",
+  "indoorPositioningDialogConnectButton": "Connect",
+  "indoorPositioningDialogDisconnectButton": "Disconnect",
 
   "routeInfoTitle": "Duration: {duration} for {distance}",
   "@routeInfoTitle": {

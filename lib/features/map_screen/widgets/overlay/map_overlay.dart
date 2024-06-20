@@ -3,6 +3,7 @@ import 'package:flutter_material_design_icons/flutter_material_design_icons.dart
 import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '/features/tracelet_manager/widgets/tracelet_manager_view.dart';
 import '/features/routing_profile/widgets/routing_profile_view.dart';
 import '/features/poi_finder/widgets/poi_finder_view.dart';
 import '../../view_models/map_screen_view_model.dart';
@@ -63,14 +64,22 @@ class MapOverlay extends ViewFragment<MapViewModel> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FloatingActionButton.small(
+                        tooltip: localizations.indoorPositioningButtonSemantic,
                         heroTag: UniqueKey(),
-                        onPressed: viewModel.connectToTracelet,
-                        child: const Icon(Icons.wifi_find_rounded),
+                        onPressed: () => showDialog(
+                          context: context,
+                            builder: (context) => AlertDialog(
+                            title: Text(localizations.indoorPositioningDialogHeading),
+                            content: const TraceletManagerView(),
+                          ),
+                        ),
+                        child: const Icon(Icons.settings_remote_outlined),
                       ),
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
                         child: viewModel.hasAnyRoutes
                           ? FloatingActionButton.small(
+                            tooltip: localizations.routeSelectionButtonSemantic,
                             heroTag: UniqueKey(),
                             onPressed: viewModel.showRouteSelection,
                             child: const Icon(Icons.directions_rounded),
