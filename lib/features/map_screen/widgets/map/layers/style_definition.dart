@@ -658,7 +658,6 @@ const _indoorPosition = [
     'id': 'indoor-position-shadow',
     'source': 'indoor-position',
     'type': 'circle',
-    'filter': _isCurrentLevelFilter,
     'paint': {
       'circle-radius': 17,
       'circle-opacity': 0.7,
@@ -675,6 +674,19 @@ const _indoorPosition = [
     'paint': {
       'circle-radius': 8,
       'circle-color': _routingPathFillColor,
+      'circle-stroke-width': 4,
+      'circle-stroke-color': '#fff',
+      'circle-pitch-alignment': 'map',
+    },
+  },
+  {
+    'id': 'indoor-position-other',
+    'source': 'indoor-position',
+    'type': 'circle',
+    'filter': ['!', _isCurrentLevelFilter],
+    'paint': {
+      'circle-radius': 8,
+      'circle-color': _routingPathOtherLevelFillColor,
       'circle-stroke-width': 4,
       'circle-stroke-color': '#fff',
       'circle-pitch-alignment': 'map',
