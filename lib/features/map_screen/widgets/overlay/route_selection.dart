@@ -199,9 +199,7 @@ class RouteDetails extends ViewFragment<MapViewModel> {
               alignment: WrapAlignment.end,
               children: [
                 FilledButton(
-                  onPressed: () {
-                    viewModel.startWalking();
-                  },
+                  onPressed: viewModel.hideRouteSelection,
                   child: Text(localizations.startNavigationButton),
                 ),
               ],
