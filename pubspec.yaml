@@ -28,7 +28,7 @@ dependencies:
   flutter_material_design_icons: ^1.1.7296
   moment_dart: ^1.1.0
   render_metrics: ^2.0.2
-  uni_links: ^0.5.1
+  app_links: ^6.1.4
   easylocate_flutter_sdk:
     path: ./easylocate_flutter_sdk
   flutter_localizations:

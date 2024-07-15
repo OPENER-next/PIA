@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:get_it/get_it.dart';
-import 'package:uni_links/uni_links.dart' as deep_link;
+import 'package:app_links/app_links.dart';
 
 import '../models/deep_link_actions.dart';
 import '../utils/consumable.dart';
@@ -13,8 +13,10 @@ import '../utils/consumable.dart';
 
 class DeepLinkService extends Service with Disposable {
 
+  static final _appLinks = AppLinks();
+
   static Future<DeepLinkService> init() async {
-    final uri = await deep_link.getInitialUri();
+    final uri = await _appLinks.getInitialLink();
     return DeepLinkService._(uri);
   }
 
@@ -38,7 +40,7 @@ class DeepLinkService extends Service with Disposable {
       initialUri != null ? DeepLinkAction.fromUri(initialUri) : null,
     )
   {
-    _subscription = deep_link.uriLinkStream.listen(_handleDeepLinkUri);
+    _subscription = _appLinks.uriLinkStream.listen(_handleDeepLinkUri);
   }
 
   void _handleDeepLinkUri(Uri? uri) {
