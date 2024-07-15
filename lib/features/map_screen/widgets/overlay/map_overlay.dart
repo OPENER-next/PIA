@@ -42,7 +42,7 @@ class MapOverlay extends ViewFragment<MapViewModel> {
                     children: [
                       POIFinderView(
                         onSelection: (poi) {
-                          viewModel.destinationPosition = poi.position;
+                          viewModel.setDestination(poi.position);
                         },
                       ),
                       FloatingActionButton.small(

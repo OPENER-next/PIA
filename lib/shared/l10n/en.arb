@@ -133,6 +133,11 @@
 
   "startNavigationButton": "Start Navigation",
 
+  "destinationReachedPromptTitle": "Destination reached",
+  "destinationReachedPromptMessage": "Do you want to return to the INSA App?",
+  "destinationReachedPromptStayButton": "Stay",
+  "destinationReachedPromptReturnButton": "Return",
+
   "indoorPositioningDialogHeading": "Indoor positioning",
   "indoorPositioningDialogConnectButton": "Connect",
   "indoorPositioningDialogDisconnectButton": "Disconnect",

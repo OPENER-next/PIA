@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide View;
 import 'package:flutter_mvvm_architecture/base.dart';
+import 'package:flutter_mvvm_architecture/extras.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../widgets/overlay/map_overlay.dart';
@@ -8,7 +9,7 @@ import '/shared/models/position.dart';
 import 'map/map_view.dart';
 
 
-class MapScreen extends View<MapViewModel> {
+class MapScreen extends View<MapViewModel> with PromptHandler {
   const MapScreen({ super.key }) : super(create: MapViewModel.new);
 
   @override
@@ -23,9 +24,9 @@ class MapScreen extends View<MapViewModel> {
           zoom: 17,
         ),
         onMapLongClick: (p0, position) async {
-          viewModel.destinationPosition = Position(
+          viewModel.setDestination(Position(
             position.latitude, position.longitude, level: viewModel.levelController.level
-          );
+          ));
         },
         overlayBuilder: (context, controller) {
           viewModel.mapController = controller;

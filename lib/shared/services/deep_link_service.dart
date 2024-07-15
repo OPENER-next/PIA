@@ -17,7 +17,8 @@ class DeepLinkService extends Service with Disposable {
 
   static Future<DeepLinkService> init() async {
     final uri = await _appLinks.getInitialLink();
-    return DeepLinkService._(uri);
+    final action = uri != null ? DeepLinkAction.fromUri(uri) : null;
+    return DeepLinkService._(action);
   }
 
   final Consumable<DeepLinkAction> _action;
@@ -35,18 +36,14 @@ class DeepLinkService extends Service with Disposable {
 
   late final StreamSubscription _subscription;
 
-  DeepLinkService._(Uri? initialUri) :
-    _action = Consumable<DeepLinkAction>(
-      initialUri != null ? DeepLinkAction.fromUri(initialUri) : null,
-    )
+  DeepLinkService._(DeepLinkAction? initialAction) :
+    _action = Consumable<DeepLinkAction>(initialAction)
   {
     _subscription = _appLinks.uriLinkStream.listen(_handleDeepLinkUri);
   }
 
-  void _handleDeepLinkUri(Uri? uri) {
-    if (uri != null) {
-      _action.stock(DeepLinkAction.fromUri(uri));
-    }
+  void _handleDeepLinkUri(Uri uri) {
+    _action.stock(DeepLinkAction.fromUri(uri));
   }
 
   @override

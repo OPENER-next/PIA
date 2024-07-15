@@ -221,7 +221,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a87f8e5d8f4bbd61e1eaba3bfed401ac1dc8c0f0
+      resolved-ref: "93742fb27d9906b4c2b657570475134a6939914b"
       url: "https://github.com/Robbendebiene/flutter-mvvm-architecture.git"
     source: git
     version: "0.0.1"
@@ -239,10 +239,10 @@ packages:
     dependency: "direct main"
     description:
       name: get_it
-      sha256: "529de303c739fca98cd7ece5fca500d8ff89649f1bb4b4e94fb20954abcd7468"
+      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
       url: "https://pub.dev"
     source: hosted
-    version: "7.6.0"
+    version: "7.7.0"
   gtk:
     dependency: transitive
     description:

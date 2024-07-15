@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' hide Route;
 import 'package:flutter_mvvm_architecture/base.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:flutter_mvvm_architecture/extras.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:maplibre_gl/maplibre_gl.dart' hide Circle;
 import 'package:mobx/mobx.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:render_metrics/render_metrics.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/live_route.dart';
 import '../models/route_discomforts.dart';
@@ -27,7 +31,7 @@ import '../widgets/map/layers/map_routing_layer.dart';
 import '../widgets/map/layers/map_backdrop_layer.dart';
 import '../widgets/map/map_layer_manager.dart';
 
-class MapViewModel extends ViewModel with Reactor {
+class MapViewModel extends ViewModel with Reactor, PromptMediator {
   MapViewModel() {
     react(
       (_) => indoorPosition,
@@ -100,7 +104,21 @@ class MapViewModel extends ViewModel with Reactor {
     // important: needs to be defined after the reactions are hooked up
     final deepLinkAction = getService<DeepLinkService>().consume<NavigateAction>();
     if (deepLinkAction != null) {
-      destinationPosition = deepLinkAction.destination;
+      setDestination(deepLinkAction.destination, () async {
+        final localizations = AppLocalizations.of(context)!;
+        final result = await promptUserInput(
+          title: localizations.destinationReachedPromptTitle,
+          message: localizations.destinationReachedPromptMessage,
+          choices: {
+            localizations.destinationReachedPromptStayButton: false,
+            localizations.destinationReachedPromptReturnButton: true,
+          },
+          isDismissible: true,
+        );
+        if (result == true) {
+          SystemNavigator.pop();
+        }
+      });
     }
   }
 
@@ -138,8 +156,22 @@ class MapViewModel extends ViewModel with Reactor {
 
   Position? get destinationPosition => _destinationPosition.value;
 
-  set destinationPosition(Position? value) =>
+  // used to register a single one time reaction when the destination is reached
+  ReactionDisposer? _destinationReachedDisposer;
+  setDestination(Position value, [VoidCallback? onReached]) {
     runInAction(() => _destinationPosition.value = value);
+    // always clear any previous destination reaction
+    _destinationReachedDisposer?.call();
+    // optionally register new destination reaction
+    if (onReached != null) {
+      _destinationReachedDisposer = when(
+        (_) => destinationPosition != null &&
+               indoorPosition != null &&
+               Circle(destinationPosition!, 3).isPointInside(indoorPosition!),
+        onReached,
+      );
+    }
+  }
 
   // ROUTES \\
 
