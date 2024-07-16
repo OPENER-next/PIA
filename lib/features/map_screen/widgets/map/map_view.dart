@@ -62,8 +62,8 @@ class _MapViewState extends State<MapView> {
           trackCameraPosition: true,
           onStyleLoadedCallback: _onStyleLoaded,
           styleString: widget.styleUrl,
-          attributionButtonPosition: AttributionButtonPosition.BottomLeft,
-          attributionButtonMargins: Point(viewPadding.left, viewPadding.bottom),
+          attributionButtonPosition: AttributionButtonPosition.BottomRight,
+          attributionButtonMargins: Point(viewPadding.right, viewPadding.bottom),
           compassViewMargins: Point(viewPadding.right, viewPadding.top),
         ),
         if (widget.overlayBuilder != null && _styleLoaded)
