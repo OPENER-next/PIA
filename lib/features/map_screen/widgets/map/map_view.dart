@@ -7,7 +7,7 @@ import 'map_layer_manager.dart';
 
 typedef OverlayBuilder = Widget Function(
   BuildContext context,
-  MaplibreMapController mapController,
+  MapLibreMapController mapController,
 );
 
 
@@ -44,7 +44,7 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  MaplibreMapController? _mapController;
+  MapLibreMapController? _mapController;
 
   var _styleLoaded = false;
 
@@ -54,7 +54,7 @@ class _MapViewState extends State<MapView> {
 
     return Stack(
       children: [
-        MaplibreMap(
+        MapLibreMap(
           onMapClick: widget.onMapClick,
           onMapLongClick: widget.onMapLongClick,
           onMapCreated: _onMapCreated,
@@ -62,7 +62,7 @@ class _MapViewState extends State<MapView> {
           trackCameraPosition: true,
           onStyleLoadedCallback: _onStyleLoaded,
           styleString: widget.styleUrl,
-          attributionButtonPosition: AttributionButtonPosition.BottomLeft,
+          attributionButtonPosition: AttributionButtonPosition.bottomRight,
           attributionButtonMargins: Point(viewPadding.left, viewPadding.bottom),
           compassViewMargins: Point(viewPadding.right, viewPadding.top),
         ),
@@ -72,7 +72,7 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  void _onMapCreated(MaplibreMapController controller) async {
+  void _onMapCreated(MapLibreMapController controller) async {
     setState(() {
       _mapController = controller;
     });

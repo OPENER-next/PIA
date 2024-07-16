@@ -125,7 +125,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
 
   // can only be used in overlay
 
-  late MaplibreMapController mapController;
+  late MapLibreMapController mapController;
 
   final renderManager = RenderParametersManager<String>();
 

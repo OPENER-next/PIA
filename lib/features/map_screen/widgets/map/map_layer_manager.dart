@@ -9,9 +9,9 @@ class MapLayerManager {
       (id, description) => MapEntry(id, description.create(id)),
     );
 
-  MaplibreMapController? _controller;
+  MapLibreMapController? _controller;
 
-  set controller(MaplibreMapController value) {
+  set controller(MapLibreMapController value) {
     if (_controller != value) {
       if (_controller != null) {
         _unregisterLayers();
@@ -110,9 +110,9 @@ abstract class MapLayer<T extends MapLayerDescription> {
 
   // Will be set by the MapLayerManager
 
-  MaplibreMapController? _controller;
+  MapLibreMapController? _controller;
 
-  MaplibreMapController get controller => _controller!;
+  MapLibreMapController get controller => _controller!;
 
   Future<void> register();
 
