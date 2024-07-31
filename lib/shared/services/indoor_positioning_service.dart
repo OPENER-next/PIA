@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:latlong2/latlong.dart';
 import 'package:easylocate_flutter_sdk/cmds/commands.dart';
 import 'package:easylocate_flutter_sdk/easylocate_sdk.dart';
 import 'package:easylocate_flutter_sdk/tracelet_api.dart';
@@ -9,8 +10,6 @@ import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 
 import 'package:mobx/mobx.dart';
-
-import '/shared/models/position.dart';
 
 /// Provides functionality to connect to a uwb tracelet, and receive position values
 ///
@@ -49,10 +48,10 @@ class IndoorPositioningService extends Service implements Disposable {
 
   // ------------------  Current Wgs84 Position -------------------//
 
-  final Observable<Position?> _wgs84Position = Observable(null);
+  final Observable<LatLng?> _wgs84Position = Observable(null);
 
   /// Returns the current wgs84 position from a tracelet. If no position found returns null
-  Position? get wgs84position => _wgs84Position.value;
+  LatLng? get wgs84position => _wgs84Position.value;
 
   // ------------------  EasyLocate SDK -------------------//
 
@@ -141,7 +140,7 @@ class IndoorPositioningService extends Service implements Disposable {
                 PositionListener(
                   onWgs84PositionUpdated: (position) {
                     runInAction(
-                      () => _wgs84Position.value = Position(position.lat, position.lon),
+                      () => _wgs84Position.value = LatLng(position.lat, position.lon),
                     );
                   },
                 ),

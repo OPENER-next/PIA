@@ -1,7 +1,6 @@
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '/shared/models/position.dart';
 import '/shared/models/pois.dart';
 
 
@@ -36,7 +35,7 @@ class POICollection extends Iterable<POI> {
 
   /// Sorts the collection in place.
 
-  void sortByDistance(Position position) => _pois.sort(
+  void sortByDistance(LatLng position) => _pois.sort(
     (a, b) => (
       _distanceCalc.distance(position, a.position) -
       _distanceCalc.distance(position, b.position)
