@@ -82,6 +82,9 @@ sealed class POI {
     if (tags['amenity'] == 'police') {
       return POIPolice.new;
     }
+    if (tags['amenity'] == 'waiting_room') {
+      return POIWaitingRoom.new;
+    }
     if (tags['shop'] != null) {
       return POIShop.new;
     }
@@ -311,6 +314,24 @@ class POIPolice extends POI {
   @override
   Iterable<String> keywords(localizations) sync* {
     yield localizations.poiKeywordPolice01;
+  }
+}
+
+class POIWaitingRoom extends POI {
+  POIWaitingRoom({
+    required super.id,
+    required super.name,
+    required super.position
+  });
+
+  @override
+  get symbol => MdiIcons.seatPassenger;
+
+  @override
+  Iterable<String> keywords(localizations) sync* {
+    yield localizations.poiKeywordWaitingRoom01;
+    yield localizations.poiKeywordWaitingRoom02;
+    yield localizations.poiKeywordWaitingRoom03;
   }
 }
 
