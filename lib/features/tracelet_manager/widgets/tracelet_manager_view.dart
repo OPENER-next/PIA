@@ -11,39 +11,46 @@ class TraceletManagerView extends View<TraceletManagerViewModel> {
   Widget build(BuildContext context, TraceletManagerViewModel viewModel) {
     final localizations = AppLocalizations.of(context)!;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: viewModel.logMessageCount,
-            itemBuilder: (context, i) => Text(
-              viewModel.logMessageByIndex(i),
-              style: const TextStyle(fontSize: 10),
-            )
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(localizations.indoorPositioningDialogHeading),
           ),
-        ),
-        Flexible(
-          child: Wrap(
-            spacing: 5,
-            children: [
-              TextButton(
-                onPressed: !viewModel.isConnected
-                  ? viewModel.connectToTracelet
-                  : null,
-                child: Text(localizations.indoorPositioningDialogConnectButton),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: viewModel.logMessageCount,
+              itemBuilder: (context, i) => Text(
+                viewModel.logMessageByIndex(i),
+                style: const TextStyle(fontSize: 10),
               ),
-              TextButton(
-                onPressed: viewModel.isConnected
-                  ? viewModel.disconnectFromTracelet
-                  : null,
-                child: Text(localizations.indoorPositioningDialogDisconnectButton),
-              ),
-            ],
+            ),
           ),
-        )
-      ],
+          Flexible(
+            child: Wrap(
+              spacing: 5,
+              children: [
+                TextButton(
+                  onPressed: !viewModel.isConnected
+                    ? viewModel.connectToTracelet
+                    : null,
+                  child: Text(localizations.indoorPositioningDialogConnectButton),
+                ),
+                TextButton(
+                  onPressed: viewModel.isConnected
+                    ? viewModel.disconnectFromTracelet
+                    : null,
+                  child: Text(localizations.indoorPositioningDialogDisconnectButton),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

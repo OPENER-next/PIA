@@ -68,9 +68,8 @@ class MapOverlay extends ViewFragment<MapViewModel> {
                         heroTag: UniqueKey(),
                         onPressed: () => showDialog(
                           context: context,
-                            builder: (context) => AlertDialog(
-                            title: Text(localizations.indoorPositioningDialogHeading),
-                            content: const TraceletManagerView(),
+                          builder: (context) => const Dialog(
+                            child: TraceletManagerView(),
                           ),
                         ),
                         child: const Icon(Icons.settings_remote_outlined),
