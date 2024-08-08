@@ -20,6 +20,10 @@ class _MapPositionLayer extends MapLayer<MapPositionLayer> {
 
   @override
   Future<void> register() async {
+    final ids = await controller.getSourceIds();
+    if (ids.contains(id)) {
+      return update(description);
+    }
     await controller.addGeoJsonSource(id, _createGeoJsonFeatureCollection());
   }
 
@@ -30,7 +34,11 @@ class _MapPositionLayer extends MapLayer<MapPositionLayer> {
 
   @override
   Future<void> unregister() async {
-    await controller.removeSource(id);
+    // remove source doesn't work here, so set empty collection
+    await controller.setGeoJsonSource(id, {
+      'type': 'FeatureCollection',
+      'features': [],
+    });
   }
 
   Map<String, dynamic> _createGeoJsonFeature() => {

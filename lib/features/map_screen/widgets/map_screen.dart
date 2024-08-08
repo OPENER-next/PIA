@@ -26,7 +26,7 @@ class MapScreen extends View<MapViewModel> with PromptHandler {
         onMapLongClick: (p0, position) async {
           viewModel.setDestination(Position(
             position.latitude, position.longitude, level: viewModel.levelController.level
-          ));
+          ), viewModel.clearDestination);
         },
         overlayBuilder: (context, controller) {
           viewModel.mapController = controller;

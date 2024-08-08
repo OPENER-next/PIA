@@ -168,7 +168,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
 
   // used to register a single one time reaction when the destination is reached
   ReactionDisposer? _destinationReachedDisposer;
-  setDestination(Position value, [VoidCallback? onReached]) {
+  setDestination(Position? value, [VoidCallback? onReached]) {
     runInAction(() => _destinationPosition.value = value);
     // always clear any previous destination reaction
     _destinationReachedDisposer?.call();
@@ -177,10 +177,19 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
       _destinationReachedDisposer = when(
         (_) => destinationPosition != null &&
                indoorPosition != null &&
-               Circle(destinationPosition!, 3).isPointInside(indoorPosition!),
+               Circle(destinationPosition!, 3).isPointInside(indoorPosition!) &&
+               destinationPosition!.level == indoorPosition!.level,
         onReached,
       );
     }
+  }
+
+  void clearDestination() {
+    runInAction(() {
+      setDestination(null);
+      _routes.clear();
+      selectRoute(0);
+    });
   }
 
   // ROUTES \\

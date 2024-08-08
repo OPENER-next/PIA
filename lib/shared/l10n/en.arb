@@ -134,7 +134,7 @@
 
   "cancelButton": "Cancel",
 
-  "startNavigationButton": "Start Navigation",
+  "discardRouteButton": "Discard Route",
 
   "destinationReachedPromptTitle": "Destination reached",
   "destinationReachedPromptMessage": "Do you want to return to the INSA App?",

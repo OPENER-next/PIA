@@ -79,7 +79,7 @@
   "doorProfileAutomaticButtonLabel": "Automatische Tür mit Knopf benutzbar",
   "doorProfileAutomaticSensorLabel": "Automatische Tür mit Sensor benutzbar",
   "cancelButton": "Abbrechen",
-  "startNavigationButton": "Navigation starten",
+  "discardRouteButton": "Route verwerfen",
   "destinationReachedPromptTitle": "Ziel erreicht",
   "destinationReachedPromptMessage": "Möchten Sie zur INSA App zurückkehren?",
   "destinationReachedPromptStayButton": "Bleiben",
