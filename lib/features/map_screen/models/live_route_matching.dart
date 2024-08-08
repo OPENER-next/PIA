@@ -31,8 +31,8 @@ mixin LiveRouteMatching {
 
   LiveRouteSegment? nearestEdge(Position position, num maxDeviation) {
     final point = maps_toolkit.LatLng(position.latitude, position.longitude);
-    // only edges that touch the current level
-    final sameLevelEdges = edges.where(
+    // only edges that touch the current level starting from the nearest edge
+    final sameLevelEdges = edges.reversed.where(
       (edge) => edge.fromLevel == position.level || edge.toLevel == position.level,
     );
 
@@ -41,21 +41,39 @@ mixin LiveRouteMatching {
       final path = edge.path
         .map((p) => maps_toolkit.LatLng(p.latitude, p.longitude))
         .toList(growable: false);
-      final index = maps_toolkit.PolygonUtil.locationIndexOnPath(
-        point, path, true, tolerance: maxDeviation,
-      );
-      if (index != -1) {
-        nearestEdge = edge;
-        // reduce deviation for each new hit
-        maxDeviation = maps_toolkit.PolygonUtil.distanceToLine(
-          point, path[index], path[index + 1],
+
+
+      if (edge.path.length == 1) {
+        final deviation = maps_toolkit.SphericalUtil.computeDistanceBetween(
+          point, path.first,
         );
+        // <= instead of < to favor later route segments
+        if (deviation <= maxDeviation) {
+          nearestEdge = edge;
+          maxDeviation = deviation;
+        }
+      }
+      else {
+        final index = maps_toolkit.PolygonUtil.locationIndexOnPath(
+          point, path, true, tolerance: maxDeviation,
+        );
+        if (index != -1) {
+          nearestEdge = edge;
+          // reduce deviation for each new hit but use ceil to allow some variation
+          maxDeviation = maps_toolkit.PolygonUtil.distanceToLine(
+            point, path[index], path[index + 1],
+          ).ceil();
+        }
       }
     }
     return nearestEdge;
   }
 
   LiveRouteSegment _shortenEdgeToPosition(LiveRouteSegment edge, Position position) {
+    // prevent node edges like doors and elevators from updating their position
+    if (edge.path.length == 1) {
+      return edge;
+    }
     final path = List.of(edge.path);
     const geo = Distance();
     var previousDistance = double.infinity;

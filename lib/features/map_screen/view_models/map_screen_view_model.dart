@@ -25,7 +25,6 @@ import '/shared/models/per_pedes_routing/ppr.dart';
 import '/shared/models/level.dart';
 import '/shared/services/ppr_service.dart';
 import '/shared/utils/indoor_level_controller.dart';
-import '/shared/utils/listenable_observable_adapter.dart';
 import '../widgets/map/layers/map_indoor_layer.dart';
 import '../widgets/map/layers/map_position_layer.dart';
 import '../widgets/map/layers/map_routing_layer.dart';
@@ -36,7 +35,10 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
   MapViewModel() {
     react(
       (_) => indoorPosition,
-      (_) => _updateIndoorPositionLayer(),
+      (_) {
+        _updateIndoorPositionLayer();
+        _updateLevel();
+      },
       fireImmediately: true,
     );
 
@@ -65,12 +67,6 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
       (_) => _updateRoutingLayer(),
       // required since we return length
       equals: (p0, p1) => false,
-    );
-
-    react(
-      // listen to route selection changes and route modifications
-      (_) => selectedRoute?.edges.lastOrNull?.toLevel,
-      _updateLevel,
     );
 
     react(
@@ -157,9 +153,13 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
   Position? get indoorPosition {
     if (_indoorPositioningService.wgs84position != null) {
       final location = _indoorPositioningService.wgs84position!;
-      // Workaround: make level identical to current level selection, because we do not get any level information yet
-      final level = ListenableObservableAdapter(levelController).listenable.level;
-      return Position(location.latitude, location.longitude, level: level);
+      // Workaround: make level identical to current route level, because we do not get any level information yet
+      // toLevel is important to allow movements to next level
+      return Position(
+        location.latitude,
+        location.longitude,
+        level: selectedRoute?.edges.lastOrNull?.toLevel ?? Level.zero,
+      );
     }
     return null;
   }
@@ -329,9 +329,9 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     }
   }
 
-  void _updateLevel(Level? level) {
-    if (level != null) {
-      levelController.changeLevel(level);
+  void _updateLevel() {
+    if (indoorPosition != null) {
+      levelController.changeLevel(indoorPosition!.level);
     }
   }
 
