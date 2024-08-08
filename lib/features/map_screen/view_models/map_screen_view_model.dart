@@ -35,10 +35,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
   MapViewModel() {
     react(
       (_) => indoorPosition,
-      (_) {
-        _updateIndoorPositionLayer();
-        _updateLevel();
-      },
+      (_) => _updateIndoorPositionLayer(),
       fireImmediately: true,
     );
 
@@ -49,6 +46,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
           if (!selectedRoute!.fitTo(indoorPosition!, maxDeviation: 3)) {
             _requestRoutes();
           }
+          _updateLevel();
         }
       }
     );
