@@ -12,6 +12,7 @@
         <service
             android:name="de.easylocate.sdk.android.service.EasyLocateService"
             android:exported="true"
+            android:permission="android.permission.BLUETOOTH_CONNECT"
             android:foregroundServiceType="connectedDevice" />
         <activity
             android:name=".MainActivity"
