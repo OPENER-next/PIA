@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pia">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+        tools:remove="maxSdkVersion" required to remove permission constraints set by flutter_blue
+        see also: https://github.com/Baseflow/flutter-permission-handler/issues/747#issuecomment-1021942623
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" tools:remove="maxSdkVersion" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" android:minSdkVersion="34" />
