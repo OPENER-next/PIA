@@ -88,7 +88,7 @@ class IndoorPositioningService extends Service implements Disposable {
       log.info('Start Scanning for Tracelets');
       await easyLocateSdk.startTraceletScan(
         scanListener,
-        scanTimeout: 5,
+        scanTimeout: Duration(seconds: 5),
       );
       // Gets the closest bluetooth tracelet available
       final bluetoothTracelet = scanListener.bleDevice;
@@ -103,7 +103,7 @@ class IndoorPositioningService extends Service implements Disposable {
         log.info('Connecting to Tracelet');
         _positioningApi = await _easyLocateSdk.connectBleTracelet(
           bluetoothTracelet,
-          ConnectionListener(
+          listener: ConnectionListener(
             onConnected: () async {
               runInAction(() => _isConnected.value = true);
               log.info('Tracelet Connected. To verify look for a blue flashing light on the device');
@@ -113,7 +113,7 @@ class IndoorPositioningService extends Service implements Disposable {
               log.info('Setting channel to Channel 5');
               // Set the channel to 5 (6.5 GHz). For dw1k tracelets, channel setting is not required as the tracelets operate only on 6.5Ghz
               final channelStatus = await _positioningApi!
-                  .setChannel(Channel.FIVE)
+                  .setRadioSettings(Channel.FIVE)
                   .timeout(const Duration(seconds: 3));
               channelStatus
                 ? log.info('Channel Set Successfully')
