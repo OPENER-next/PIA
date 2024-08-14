@@ -23,7 +23,7 @@ class GeolocationPositionService extends PositioningService {
               source: PositionSource.locationService,
               accuracy: position.accuracy);
           _controller.add(positionPackage);
-          _geolocatorLog.info('Position Received : $gnssPosition');
+          _geolocatorLog.info('Package Received : $positionPackage');
         }
       }, onDone: () {
         _geolocatorLog.info('Stopped Listening to GeoLocations');

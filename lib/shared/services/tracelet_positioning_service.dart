@@ -113,15 +113,15 @@ class TraceletPositioningService extends PositioningService {
                 _traceletLog.info('Start Positioning');
                 await _positioningApi!.startPositioning(
                     PositionListener(onWgs84PositionUpdated: (position) {
-                  final traceletPosition = LatLng(position.lat, position.lon);
                   final traceletPositionPackage = PositionPackage(
-                      position: traceletPosition,
-                      source: PositionSource.tracelet,
-                      accuracy: position.acc);
-                  _traceletLog.info('Position Received : $traceletPosition');
-                  _controller.add(traceletPositionPackage);
-                }));
-              }, onDisconnected: () {
+                position: LatLng(position.lat, position.lon),
+                source: PositionSource.tracelet,
+                accuracy: position.acc,
+              );
+              _traceletLog.info('Package Received : $traceletPositionPackage');
+              _controller.add(traceletPositionPackage);
+            }));
+          }, onDisconnected: () {
                 runInAction(() {
                   _connectionController.add(false);
                 });
@@ -131,6 +131,8 @@ class TraceletPositioningService extends PositioningService {
     } on Exception catch (error) {
       runInAction(() {
         _connectionController.add(false);
+        _controller.addError(error);
+        _traceletLog.shout('Error : $error');
       });
       _traceletLog.info(error.toString());
     }

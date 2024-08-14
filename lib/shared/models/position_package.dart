@@ -18,4 +18,9 @@ class PositionPackage {
   });
 
   bool get isPositionNotZero => position.latitude != 0 && position.longitude != 0;
+
+  @override
+  String toString() {
+    return 'Source : ${source.toString()}, Accuracy :$accuracy, Position $position';
+  }
 }
