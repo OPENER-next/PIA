@@ -10,7 +10,7 @@ class LoggingService extends Service {
   Iterable<LogRecord> get buffer => _logBuffer;
 
   LoggingService._() {
-    Logger.root.level = Level.ALL;
+    Logger.root.level = Level.INFO;
     Logger.root.onRecord.listen(_logBuffer.push);
   }
 

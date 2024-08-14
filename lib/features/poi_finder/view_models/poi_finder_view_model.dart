@@ -6,7 +6,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/shared/models/pois.dart';
-import '/shared/models/position.dart';
 import '/shared/services/indoor_positioning_service.dart';
 import '../models/poi_collection.dart';
 import '../services/poi_query_service.dart';
@@ -23,7 +22,8 @@ class POIFinderViewModel extends ViewModel {
 
   final controller = SearchController();
 
-  LatLng? get _currentLocation => getService<IndoorPositioningService>().wgs84position;
+  LatLng? get _currentLocation =>
+      getService<IndoorPositioningService>().currentPositionPackage?.position;
 
   Completer<POICollection>? _nearbyPois;
 
