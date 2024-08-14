@@ -86,11 +86,11 @@ class TraceletPositioningService extends PositioningService {
                 // A blue LED blinks on the connected device. This can be used to verify if you're connected to the right device
                 await _positioningApi!.showMe();
 
-                _traceletLog.info('Setting channel to Channel 5');
-                // Set the channel to 5 (6.5 GHz). For dw1k tracelets, channel setting is not required as the tracelets operate only on 6.5Ghz
+            _traceletLog.info('Setting channel to Channel $channel');
+            // Set the channel to 5 (6.5 GHz). For dw1k tracelets, channel setting is not required as the tracelets operate only on 6.5Ghz
                 final channelStatus = await _positioningApi!
-                    .setRadioSettings(Channel.FIVE)
-                    .timeout(const Duration(seconds: 3));
+                .setRadioSettings(channel == 5 ? Channel.FIVE : Channel.NINE)
+                .timeout(const Duration(seconds: 3));
                 channelStatus
                     ? _traceletLog.info('Channel Set Successfully')
                     : _traceletLog.shout('Channel Not Set');
