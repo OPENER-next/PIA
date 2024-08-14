@@ -25,8 +25,7 @@ class PositionFuser {
     if (_timeOfLastUpdate != null) {
       final timeDiff = time.difference(_timeOfLastUpdate!);
       if (_isInitialised) {
-        //predicted change in position for a person walking is considered to be around 1 meter/second,
-        // but for a moving vehicle it can be more. For now we've considered 25km/h (around 6.9 m/s)
+        //predicted change in position for a person walking is considered to be around 5 km/h,
         const positionVariance = 5.0 / 3.6;
         // Generally Represented by Q in the Kalman filter, this can be considered as the amount of uncertainty in the system model
         final Matrix2 systemUncertainty = Matrix2.identity() *
