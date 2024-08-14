@@ -25,6 +25,7 @@ import '/shared/models/per_pedes_routing/ppr.dart';
 import '/shared/models/level.dart';
 import '/shared/services/ppr_service.dart';
 import '/shared/utils/indoor_level_controller.dart';
+import '/shared/utils/indoor_location_derivative.dart';
 import '../widgets/map/layers/map_indoor_layer.dart';
 import '../widgets/map/layers/map_position_layer.dart';
 import '../widgets/map/layers/map_routing_layer.dart';
@@ -147,19 +148,12 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     'indoor-tint-layer': const MapBackdropLayer(),
   });
 
-
-  Position? get indoorPosition {
-    if (_indoorPositioningService.currentPositionPackage != null) {
-      final location = _indoorPositioningService.currentPositionPackage!.position;
-      // Workaround: make level identical to current route level, because we do not get any level information yet
-      // toLevel is important to allow movements to next level
-      return Position(
-        location.latitude,
-        location.longitude,
-        level: selectedRoute?.edges.lastOrNull?.toLevel ?? Level.zero,
-      );
-    }
-    return null;
+  // Workaround to derive level information for our specific scenario (using the location source and geo fences)
+  // because we do not get any level information yet from the positioning engine
+  late final _indoorPosition = IndoorLocationDerivative(
+    () => _indoorPositioningService.currentPositionPackage,
+  );
+  Position? get indoorPosition => _indoorPosition.position;
   }
 
   final _destinationPosition = Observable<Position?>(null);
