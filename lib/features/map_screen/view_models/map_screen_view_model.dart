@@ -149,8 +149,8 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
 
 
   Position? get indoorPosition {
-    if (_indoorPositioningService.wgs84position != null) {
-      final location = _indoorPositioningService.wgs84position!;
+    if (_indoorPositioningService.currentPositionPackage != null) {
+      final location = _indoorPositioningService.currentPositionPackage!.position;
       // Workaround: make level identical to current route level, because we do not get any level information yet
       // toLevel is important to allow movements to next level
       return Position(

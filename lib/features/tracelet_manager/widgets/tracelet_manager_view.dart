@@ -5,7 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../view_models/tracelet_manager_view_model.dart';
 
 class TraceletManagerView extends View<TraceletManagerViewModel> {
-  const TraceletManagerView({super.key}) : super(create: TraceletManagerViewModel.new);
+  const TraceletManagerView({super.key})
+      : super(create: TraceletManagerViewModel.new);
 
   @override
   Widget build(BuildContext context, TraceletManagerViewModel viewModel) {
@@ -35,15 +36,15 @@ class TraceletManagerView extends View<TraceletManagerViewModel> {
               spacing: 5,
               children: [
                 TextButton(
-                  onPressed: !viewModel.isConnected
-                    ? viewModel.connectToTracelet
-                    : null,
+                  onPressed: !viewModel.isPositioning
+                      ? viewModel.startPositioning
+                      : null,
                   child: Text(localizations.indoorPositioningDialogConnectButton),
                 ),
                 TextButton(
-                  onPressed: viewModel.isConnected
-                    ? viewModel.disconnectFromTracelet
-                    : null,
+                  onPressed: viewModel.isPositioning
+                      ? viewModel.stopPositioning
+                      : null,
                   child: Text(localizations.indoorPositioningDialogDisconnectButton),
                 ),
               ],
