@@ -36,6 +36,9 @@ class FusedPositioningService extends PositioningService {
 
   late final positionFuser = PositionFuser();
 
+  /// The last know position source that influences the fused Position. This is generally the source that has the most accurate position
+  PositionSource _positionSource = PositionSource.fusion;
+
   // ------------------  System Fusion -------------------//
 
   final _fusionLog = Logger('Fusion Positioning');
@@ -79,7 +82,7 @@ class FusedPositioningService extends PositioningService {
             _wgs84reference.convertToLatLng(positionFuser.position!);
         final fusedPositionPackage = PositionPackage(
             position: fusedPosition,
-            source: PositionSource.fusion,
+            source: _positionSource,
             accuracy: _calculateAcc(positionFuser.covariance!));
         _fusionLog.info('Package Received : $fusedPositionPackage');
         _controller.add(fusedPositionPackage);
@@ -93,7 +96,8 @@ class FusedPositioningService extends PositioningService {
     positionFuser.timeUpdate(currentTimestamp);
     if (positionPackage.accuracy > 0 &&
         positionPackage.accuracy < _uwbAccuracyThreshold) {
-      _fusionLog.info('Updating Tracelet Position');
+      _fusionLog.info('Updating UWB Measurement');
+      _positionSource = PositionSource.tracelet;
       _lastUwbTimeStamp = currentTimestamp;
       positionFuser.measurementUpdate(
           _wgs84reference.convertToVector2(positionPackage.position),
@@ -112,7 +116,8 @@ class FusedPositioningService extends PositioningService {
         positionPackage.accuracy < _gnssAccuracyThreshold &&
         // Waits for a period to receive a uwb position. If a valid uwb position exists in this time we don't consider gnss
         uwbTimeDiff.inSeconds >= _uwbWaitTimeInSeconds) {
-      _fusionLog.info('Updating Geolocation');
+      _fusionLog.info('Updating GNSS Measurement');
+      _positionSource = PositionSource.locationService;
       positionFuser.measurementUpdate(
           _wgs84reference.convertToVector2(positionPackage.position),
           Matrix2.identity() *
