@@ -154,7 +154,6 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     () => _indoorPositioningService.currentPositionPackage,
   );
   Position? get indoorPosition => _indoorPosition.position;
-  }
 
   final _destinationPosition = Observable<Position?>(null);
 
