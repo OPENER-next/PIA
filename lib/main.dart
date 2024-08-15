@@ -26,9 +26,9 @@ void main() async {
   GetIt.I.registerSingleton(LoggingService());
 
   GetIt.I.registerSingleton(IndoorPositioningService(
-    referenceLatitude: 52.13052287240374,
-    referenceLongitude: 11.625185377957138,
-    referenceAzimuth: 9.89916231907847,
+    referenceLatitude: 52.13063751982141,
+    referenceLongitude: 11.625540294595387,
+    referenceAzimuth: 10.79139813008669,
   ));
 
   await Hive.initFlutter();
