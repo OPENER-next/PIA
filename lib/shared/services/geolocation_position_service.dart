@@ -7,7 +7,9 @@ class GeolocationPositionService extends PositioningService {
 
   StreamSubscription<Position>? _positionStream;
 
-  final LocationSettings locationSettings = const LocationSettings();
+  final LocationSettings locationSettings = AndroidSettings(
+    intervalDuration: const Duration(milliseconds: 100),
+  );
 
   /// Starts listening to real time positions from platform specific location services
   void _starGeolocation() {
