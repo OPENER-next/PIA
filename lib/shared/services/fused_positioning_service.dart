@@ -84,7 +84,7 @@ class FusedPositioningService extends PositioningService {
             position: fusedPosition,
             source: _positionSource,
             accuracy: _calculateAcc(positionFuser.covariance!));
-        _fusionLog.info('Package Received : $fusedPositionPackage');
+        _fusionLog.finest('Package Received : $fusedPositionPackage');
         _controller.add(fusedPositionPackage);
       }
     }
