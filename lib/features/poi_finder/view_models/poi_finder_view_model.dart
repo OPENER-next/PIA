@@ -22,27 +22,23 @@ class POIFinderViewModel extends ViewModel {
 
   final controller = SearchController();
 
-  LatLng? get _currentLocation =>
-      getService<IndoorPositioningService>().currentPositionPackage?.position;
+  LatLng? get _currentLocation => getService<IndoorPositioningService>().currentPositionPackage?.position;
 
-  Completer<POICollection>? _nearbyPois;
-
-  bool get nearbyPoisLoaded => _nearbyPois != null && _nearbyPois!.isCompleted;
+  late Completer<POICollection> _nearbyPois;
 
   void open() async {
     // clear any previous data
     controller.clear();
-    _nearbyPois = Completer();
+    _nearbyPois = Completer<POICollection>();
     controller.openView();
-
     if (_currentLocation != null) {
       final result = await _poiService.queryByRadius(
         Circle(_currentLocation!, _searchRadius),
       );
-      if (!_nearbyPois!.isCompleted) {
+      if (!_nearbyPois.isCompleted) {
         // always sort pois by distance
         result.sortByDistance(_currentLocation!);
-        _nearbyPois!.complete(result);
+        _nearbyPois.complete(result);
       }
     }
   }
@@ -51,7 +47,7 @@ class POIFinderViewModel extends ViewModel {
 
   Future<Iterable<POI>> get poiResults async {
     final locale = AppLocalizations.of(context)!;
-    final pois = await _nearbyPois!.future;
+    final pois = await _nearbyPois.future;
     if (controller.text.isNotEmpty) {
       return pois.filterByKeyword(controller.text, locale);
     }

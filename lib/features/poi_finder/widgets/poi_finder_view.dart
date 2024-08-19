@@ -21,17 +21,22 @@ class POIFinderView extends View<POIFinderViewModel> {
       viewBuilder: (suggestions) {
         return Padding(
           padding: MediaQuery.viewInsetsOf(context),
-          child: viewModel.nearbyPoisLoaded
-            ? MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView(
-                children: suggestions.toList(),
-              ),
-            )
-            : const Center(
-              child: CircularProgressIndicator(),
-            ),
+          child: FutureBuilder(
+            future: viewModel.poiResults,
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                ? MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView(
+                    children: suggestions.toList(),
+                  ),
+                )
+                : const Center(
+                  child: CircularProgressIndicator(),
+                );
+            }
+          )
         );
       },
       builder: (context, SearchController controller) {
