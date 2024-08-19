@@ -35,7 +35,7 @@ class RoutingRequest {
     this.includeStepsPath = false,
     this.includeEdges = false,
     this.includeStatistics = true,
-    this.forceLevelMatch = true,
+    this.forceLevelMatch = false,
     this.levelDistPenalty = 0,
     this.allowMatchWithNoLevel = true,
     this.noLevelPenalty = 0,
