@@ -40,7 +40,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
       (_) {
         _updateIndoorPositionLayer();
         if (isTrackingPosition) {
-          _updateCameraPosition();
+          _updateCamera();
         }
         if (selectedRoute != null) {
           if (!selectedRoute!.fitTo(indoorPosition!, maxDeviation: 3)) {
@@ -56,7 +56,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
       (_) => _orientationService.orientation,
       (_) {
         if (isTrackingPosition) {
-          _updateCameraRotation();
+          _updateCamera();
         }
       }
     );
@@ -169,7 +169,23 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
   final _trackPosition = Observable(false);
   togglePositioningTracking() {
     runInAction(() => _trackPosition.value = ! _trackPosition.value);
-    if (_trackPosition.value) _updateCameraPosition();
+    if (_trackPosition.value) {
+      // workaround to reset padding to navigation mode
+      final p =  ml.LatLng(indoorPosition!.latitude, indoorPosition!.longitude);
+      mapController.moveCamera(
+        ml.CameraUpdate.newLatLngBounds(
+          selectedRoute?.bounds ?? ml.LatLngBounds(northeast: p, southwest: p),
+          top: 150,
+        ),
+      );
+      _updateCamera();
+    }
+    else {
+      mapController.animateCamera(
+        ml.CameraUpdate.tiltTo(0),
+        duration: const Duration(milliseconds: 500),
+      );
+    }
   }
   bool get isTrackingPosition => _trackPosition.value;
 
@@ -353,22 +369,17 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     }
   }
 
-  void _updateCameraPosition() {
+  void _updateCamera() {
     if (indoorPosition != null) {
       mapController.animateCamera(
-        ml.CameraUpdate.newLatLngZoom(
-          ml.LatLng(indoorPosition!.latitude, indoorPosition!.longitude),
-          19,
-        ), duration: const Duration(milliseconds: 500),
+        ml.CameraUpdate.newCameraPosition(ml.CameraPosition(
+          bearing: _orientationService.orientation / pi * 180,
+          target: ml.LatLng(indoorPosition!.latitude, indoorPosition!.longitude),
+          zoom: 21,
+          tilt: 60,
+        )), duration: const Duration(milliseconds: 500),
       );
     }
-  }
-
-  void _updateCameraRotation() {
-    mapController.animateCamera(
-      ml.CameraUpdate.bearingTo(_orientationService.orientation / pi * 180),
-      duration: const Duration(milliseconds: 500),
-    );
   }
 
   void _updateDestinationLayer() {

@@ -16,7 +16,7 @@ class OrientationService {
   StreamSubscription<SensorEvent>? _orientationStreamSub;
 
   OrientationService({
-    this.orientationUpdateInterval = const Duration(milliseconds: 200),
+    this.orientationUpdateInterval = const Duration(milliseconds: 400),
   }) {
     _setupRotationSensorStream();
   }

@@ -23,6 +23,7 @@ class MapOverlay extends ViewFragment<MapViewModel> {
   @override
   Widget build(BuildContext context, viewModel) {
     final localizations = AppLocalizations.of(context)!;
+    final theme =  Theme.of(context);
     const inset = 10.0;
 
     return Stack(
@@ -64,14 +65,16 @@ class MapOverlay extends ViewFragment<MapViewModel> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FloatingActionButton.small(
+                        backgroundColor: viewModel.isTrackingPosition
+                            ? theme.colorScheme.primary
+                            : null,
+                            foregroundColor: viewModel.isTrackingPosition
+                            ? theme.colorScheme.onPrimary
+                            : null,
                         tooltip: localizations.indoorPositionTrackingButtonSemantic,
                         heroTag: UniqueKey(),
                         onPressed: viewModel.togglePositioningTracking,
-                        child: Icon(
-                          viewModel.isTrackingPosition
-                            ? Icons.my_location_rounded
-                            : Icons.location_searching_rounded,
-                        ),
+                        child: const Icon(Icons.navigation_rounded),
                       ),
                       FloatingActionButton.small(
                         tooltip: localizations.indoorPositioningButtonSemantic,
