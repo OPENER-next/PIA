@@ -14,10 +14,7 @@ dependencies:
   http: ^1.1.0
   latlong2: ^0.9.0
   maps_toolkit: ^3.0.0
-  maplibre_gl:
-    git:
-      url: https://github.com/maplibre/flutter-maplibre-gl.git
-      ref: main
+  maplibre_gl: 0.19.0+2
   flutter_mvvm_architecture:
     git:
       url: https://github.com/Robbendebiene/flutter-mvvm-architecture.git
@@ -38,14 +35,6 @@ dependencies:
 
 # To prevent version solving in PIA
 dependency_overrides:
-    # ffi ^2.0.1 is used as an override because PIA depends on the easylocate_flutter_sdk from path, which depends on flutter_libserialport from path  & quick_blue ^0.4.1+1, which require different version of ffi
-    #  flutter_libserialport dependencies [libserialport from path -> ffi ^2.0.1]
-    #  quick_blue dependencies [quick_blue ^0.4.1+1 -> quick_blue_linux ^0.1.2 -> bluez ^0.7.9 -> dbus ^0.6.0 ->  ffi ^1.1.2]
-    ffi: ^2.0.1
-    # xml ^6.0.1 is used as an override because PIA depends on imaplibre_gl from git and the easylocate_flutter_sdk from path, both of which use different version of xml
-    # imaplibre_gl dependencies [image ^4.0.17 -> xml ^6.0.1]
-    # easyLocateFlutterSDK dependencies [quick_blue ^0.4.1+1 -> quick_blue_linux ^0.1.2 -> bluez ^0.7.9 -> dbus ^0.6.0 ->  xml ^5.0.0]
-    xml: 6.0.1
     # easyLocateFlutterSDK depends on older meta version
     meta: 1.12.0
 

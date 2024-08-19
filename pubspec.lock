@@ -61,10 +61,10 @@ packages:
     dependency: transitive
     description:
       name: bluez
-      sha256: b654df6c443e4cce6d4e748b4686ac85ec662d3b5374f2ed7318c5267f9c9355
+      sha256: "203a1924e818a9dd74af2b2c7a8f375ab8e5edf0e486bba8f90a0d8a17ed9fce"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.9"
+    version: "0.8.2"
   boolean_selector:
     dependency: transitive
     description:
@@ -141,10 +141,10 @@ packages:
     dependency: transitive
     description:
       name: dbus
-      sha256: "83fb17f96be368b3b991b56929c817876cea4a689ba235ef2c359970ed7de049"
+      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.8"
+    version: "0.7.10"
   dylib:
     dependency: transitive
     description:
@@ -169,7 +169,7 @@ packages:
     source: hosted
     version: "1.3.1"
   ffi:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: ffi
       sha256: ed5337a5660c506388a9f012be0288fb38b49020ce2b45fe1f8b8323fe429f99
@@ -255,6 +255,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_bluetooth:
+    dependency: transitive
+    description:
+      name: flutter_web_bluetooth
+      sha256: "52ce64f65d7321c4bf6abfe9dac02fb888731339a5e0ad6de59fb916c20c9f02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -478,30 +486,27 @@ packages:
   maplibre_gl:
     dependency: "direct main"
     description:
-      path: "."
-      ref: main
-      resolved-ref: dc21739b9d4395b7df7f181e96d678ab0383294d
-      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
-    source: git
-    version: "0.18.0"
+      name: maplibre_gl
+      sha256: "9dd9eebee52f42a45aaa9cdb912afa47845c37007b26a799aa482ecd368804c8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0+2"
   maplibre_gl_platform_interface:
     dependency: transitive
     description:
-      path: maplibre_gl_platform_interface
-      ref: main
-      resolved-ref: dc21739b9d4395b7df7f181e96d678ab0383294d
-      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
-    source: git
-    version: "0.18.0"
+      name: maplibre_gl_platform_interface
+      sha256: a95fa38a3532253f32dfe181389adfe9f402773e58ac902d9c4efad3209e0903
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0+2"
   maplibre_gl_web:
     dependency: transitive
     description:
-      path: maplibre_gl_web
-      ref: main
-      resolved-ref: dc21739b9d4395b7df7f181e96d678ab0383294d
-      url: "https://github.com/maplibre/flutter-maplibre-gl.git"
-    source: git
-    version: "0.18.0"
+      name: maplibre_gl_web
+      sha256: "7f1540b384f16f3c9bc8b4ebdfca96fb07f6dab5d9ef4dd0e102985dba238691"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0+2"
   maps_toolkit:
     dependency: "direct main"
     description:
@@ -650,10 +655,10 @@ packages:
     dependency: transitive
     description:
       name: petitparser
-      sha256: cb3798bef7fc021ac45b308f4b51208a152792445cce0448c9a4ba5879dd8750
+      sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.0"
+    version: "6.0.2"
   platform:
     dependency: transitive
     description:
@@ -686,46 +691,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
-  quick_blue:
-    dependency: transitive
-    description:
-      name: quick_blue
-      sha256: "803e31a35138a4b5cd46950b8cde8c9b2eff4dd3199fc6fea4967ebe963a28f9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.1+1"
-  quick_blue_linux:
-    dependency: transitive
-    description:
-      name: quick_blue_linux
-      sha256: ee8cac0e20bc10c9a3d32886387bdda6e6b38c95017c2218ef6a2f27e7b43923
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
-  quick_blue_macos:
-    dependency: transitive
-    description:
-      name: quick_blue_macos
-      sha256: b4420c9f2517f6c6cb7df075a5c06c2872206ce915699694b69df46420ff494c
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.1+2"
-  quick_blue_platform_interface:
-    dependency: transitive
-    description:
-      name: quick_blue_platform_interface
-      sha256: cd38f60936c5e05401d228c55c9d2f67355207d18850bd829fd61c7e75ef860e
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2"
-  quick_blue_windows:
-    dependency: transitive
-    description:
-      name: quick_blue_windows
-      sha256: "00db88117cccb35175597c767785d4a0c93e42bf12df1a809735f160c9ec3686"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2+2"
   rename_app:
     dependency: transitive
     description:
@@ -811,6 +776,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  universal_ble:
+    dependency: transitive
+    description:
+      name: universal_ble
+      sha256: f953bce871e7392fb36f2614e97422828bc1ee9a68f4ba9495c16ea6246e647f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.1"
   uuid:
     dependency: transitive
     description:
@@ -860,13 +833,13 @@ packages:
     source: hosted
     version: "1.0.1"
   xml:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: xml
-      sha256: "6d1e8d8641b1b4675a2f6ec0d0c6b519a472f0a4f0a2aa8a63d08b64383ee87a"
+      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.1"
+    version: "6.5.0"
   yaml:
     dependency: transitive
     description:
