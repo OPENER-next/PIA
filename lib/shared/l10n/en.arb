@@ -38,6 +38,7 @@
   "findPOIsButtonSemantic": "Find points of interest",
   "levelBarSemantic": "Level selection",
   "routeSelectionButtonSemantic": "Open route selection",
+  "indoorPositionTrackingButtonSemantic": "Follow location",
   "indoorPositioningButtonSemantic": "Open indoor positioning dialog",
 
   "generalProfileTitle": "Routing profile",

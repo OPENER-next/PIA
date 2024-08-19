@@ -64,6 +64,16 @@ class MapOverlay extends ViewFragment<MapViewModel> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FloatingActionButton.small(
+                        tooltip: localizations.indoorPositionTrackingButtonSemantic,
+                        heroTag: UniqueKey(),
+                        onPressed: viewModel.togglePositioningTracking,
+                        child: Icon(
+                          viewModel.isTrackingPosition
+                            ? Icons.my_location_rounded
+                            : Icons.location_searching_rounded,
+                        ),
+                      ),
+                      FloatingActionButton.small(
                         tooltip: localizations.indoorPositioningButtonSemantic,
                         heroTag: UniqueKey(),
                         onPressed: () => showDialog(

@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart' hide Route;
 import 'package:flutter_mvvm_architecture/base.dart';
 import 'package:flutter_mvvm_architecture/extras.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:maplibre_gl/maplibre_gl.dart' hide Circle;
+import 'package:maplibre_gl/maplibre_gl.dart' as ml;
 import 'package:mobx/mobx.dart';
 import 'package:moment_dart/moment_dart.dart';
 import 'package:render_metrics/render_metrics.dart';
@@ -19,6 +19,7 @@ import '/shared/models/deep_link_actions.dart';
 import '/shared/services/deep_link_service.dart';
 import '/shared/services/config_service.dart';
 import '/shared/services/indoor_positioning_service.dart';
+import '/shared/services/orientation_service.dart';
 import '/shared/utils/reactor_mixin.dart';
 import '/shared/models/position.dart';
 import '/shared/models/per_pedes_routing/ppr.dart';
@@ -36,18 +37,26 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
   MapViewModel() {
     react(
       (_) => indoorPosition,
-      (_) => _updateIndoorPositionLayer(),
-      fireImmediately: true,
-    );
-
-    react(
-      (_) => indoorPosition,
       (_) {
+        _updateIndoorPositionLayer();
+        if (isTrackingPosition) {
+          _updateCameraPosition();
+        }
         if (selectedRoute != null) {
           if (!selectedRoute!.fitTo(indoorPosition!, maxDeviation: 3)) {
             _requestRoutes();
           }
           _updateLevel();
+        }
+      },
+      fireImmediately: true,
+    );
+
+    react(
+      (_) => _orientationService.orientation,
+      (_) {
+        if (isTrackingPosition) {
+          _updateCameraRotation();
         }
       }
     );
@@ -124,7 +133,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
 
   // can only be used in overlay
 
-  late MaplibreMapController mapController;
+  late ml.MaplibreMapController mapController;
 
   final renderManager = RenderParametersManager<String>();
 
@@ -148,12 +157,21 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     'indoor-tint-layer': const MapBackdropLayer(),
   });
 
+  final _orientationService = OrientationService();
+
   // Workaround to derive level information for our specific scenario (using the location source and geo fences)
   // because we do not get any level information yet from the positioning engine
   late final _indoorPosition = IndoorLocationDerivative(
     () => _indoorPositioningService.currentPositionPackage,
   );
   Position? get indoorPosition => _indoorPosition.position;
+
+  final _trackPosition = Observable(false);
+  togglePositioningTracking() {
+    runInAction(() => _trackPosition.value = ! _trackPosition.value);
+    if (_trackPosition.value) _updateCameraPosition();
+  }
+  bool get isTrackingPosition => _trackPosition.value;
 
   final _destinationPosition = Observable<Position?>(null);
 
@@ -293,7 +311,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
       final padding = const EdgeInsets.symmetric(horizontal: 60, vertical: 50)
         + EdgeInsets.only(bottom: sheetSize?.height ?? 0);
 
-      mapController.animateCamera(CameraUpdate.newLatLngBounds(
+      mapController.animateCamera(ml.CameraUpdate.newLatLngBounds(
         selectedRoute!.bounds,
         left: padding.left,
         top: padding.top,
@@ -335,6 +353,24 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     }
   }
 
+  void _updateCameraPosition() {
+    if (indoorPosition != null) {
+      mapController.animateCamera(
+        ml.CameraUpdate.newLatLngZoom(
+          ml.LatLng(indoorPosition!.latitude, indoorPosition!.longitude),
+          19,
+        ), duration: const Duration(milliseconds: 500),
+      );
+    }
+  }
+
+  void _updateCameraRotation() {
+    mapController.animateCamera(
+      ml.CameraUpdate.bearingTo(_orientationService.orientation / pi * 180),
+      duration: const Duration(milliseconds: 500),
+    );
+  }
+
   void _updateDestinationLayer() {
     if (destinationPosition != null) {
       mapLayerManager.set('indoor-routing-destination', MapPositionLayer(
@@ -351,6 +387,7 @@ class MapViewModel extends ViewModel with Reactor, PromptMediator {
     levelController.dispose();
     _ppr.dispose();
     routePageController?.dispose();
+    _orientationService.dispose();
     super.dispose();
   }
 }

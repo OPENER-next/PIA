@@ -250,6 +250,14 @@ packages:
       url: "https://github.com/Robbendebiene/flutter-mvvm-architecture.git"
     source: git
     version: "0.0.1"
+  flutter_sensors:
+    dependency: "direct main"
+    description:
+      name: flutter_sensors
+      sha256: "3ac86cd414eb127c4afb97b6d986996d5f4bd7e2223f5c9aea53c13a7022c7aa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter

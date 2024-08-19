@@ -37,6 +37,7 @@
   "findPOIsButtonSemantic": "Orte von Interesse suchen",
   "levelBarSemantic": "Ebenenauswahl",
   "routeSelectionButtonSemantic": "Routenwahl öffnen",
+  "indoorPositionTrackingButtonSemantic": "Position verfolgen",
   "indoorPositioningButtonSemantic": "Indoor-Positionierungsdialog öffnen",
   "generalProfileTitle": "Routenprofil",
   "generalProfileSpeedLabel": "Geschwindigkeit",
